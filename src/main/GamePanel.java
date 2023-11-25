@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
+import static util.Constants.PlayerConstants.*;
+import static util.Constants.Direction.*;
 
 public class GamePanel extends JPanel {
 
@@ -19,6 +21,9 @@ public class GamePanel extends JPanel {
 	private BufferedImage img;
 	private BufferedImage[][] animations;
 	private int aniTick, aniIndex, aniSpeed = 8;
+	private int playerAction = idle;
+	private int playerDir = -1;
+	private boolean moving = false;
 	
 	public GamePanel() {
 		mouseInputs = new MouseInputs(this);
@@ -67,19 +72,13 @@ public class GamePanel extends JPanel {
 		setMaximumSize(size);
 	}
 
-	public void changeXDelta(int value) {
-		this.xDelta += value;
-
+	public void setDirection (int direction) {
+		this.playerDir = direction;
+		moving = true;
 	}
-
-	public void changeYDelta(int value) {
-		this.yDelta += value;
-
-	}
-
-	public void setRectPos(int x, int y) {
-		this.xDelta = x;
-		this.yDelta = y;
+	
+	public void setMoving(boolean moving) {
+		this.moving = moving;
 	}
 	
 	private void updateAnimationTick() {
@@ -89,17 +88,52 @@ public class GamePanel extends JPanel {
 			aniTick = 0;
 			aniIndex++;
 			
-			if (aniIndex >= 8) {
+			if (aniIndex >= GetSpriteAmount(playerAction)) {
 				aniIndex = 0;
 			}
 		}
 	}
-
+	
+	private void setAnimation() {
+		// TODO Auto-generated method stub
+		if(moving ) {
+			playerAction = running;
+		}
+		else {
+			playerAction = idle;
+		}
+	}
+	
+	private void updatePos() {
+		// TODO Auto-generated method stub
+		if (moving) {
+			switch(playerDir) {
+			case left:
+				xDelta -= 5;
+				break;
+			case up:
+				yDelta -= 5;
+				break;
+			case right:
+				xDelta += 5;
+				break;
+			case down:
+				yDelta += 5;
+				break;
+			}
+		}
+	}
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		updateAnimationTick();
-		
-		g.drawImage(animations[7][aniIndex], (int) xDelta, (int) yDelta, null);
+		setAnimation();
+		updatePos();
+		g.drawImage(animations[playerAction][aniIndex], (int) xDelta, (int) yDelta, 256, 256, null);
 	}
+
+	
+
+	
 
 }
