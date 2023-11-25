@@ -17,25 +17,46 @@ public class GamePanel extends JPanel {
 	private MouseInputs mouseInputs;
 	private float xDelta = 100, yDelta = 100;
 	private BufferedImage img;
+	private BufferedImage[][] animations;
+	private int aniTick, aniIndex, aniSpeed = 8;
 	
 	public GamePanel() {
 		mouseInputs = new MouseInputs(this);
 		importImg();
+		loadAnimations();
 		setPanelSize();
 		addKeyListener (new KeyboardInputs(this));
 		addMouseListener(mouseInputs);
 		addMouseMotionListener(mouseInputs);
 	}
 	
+	private void loadAnimations() {
+		// TODO Auto-generated method stub
+		animations = new BufferedImage[10][8];
+		
+		for (int j = 0; j < animations.length; j++) {
+			for (int i = 0; i < animations[j].length; i++) {
+				animations[j][i] = img.getSubimage(i*128, j*128, 128, 128);
+			}
+		}
+		
+	}
+
 	private void importImg() {
 		// TODO Auto-generated method stub
-		InputStream is = getClass().getResourceAsStream("/Idle.png");
+		InputStream is = getClass().getResourceAsStream("/Raider_3_Spritelist.png");
 		
 		try {
 			img = ImageIO.read(is);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -60,12 +81,25 @@ public class GamePanel extends JPanel {
 		this.xDelta = x;
 		this.yDelta = y;
 	}
+	
+	private void updateAnimationTick() {
+		// TODO Auto-generated method stub
+		aniTick++;
+		if (aniTick >= aniSpeed) {
+			aniTick = 0;
+			aniIndex++;
+			
+			if (aniIndex >= 8) {
+				aniIndex = 0;
+			}
+		}
+	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		updateAnimationTick();
 		
-		g.drawImage(img.getSubimage(0, 0, 130, 128), (int) xDelta, (int) yDelta, null);
+		g.drawImage(animations[7][aniIndex], (int) xDelta, (int) yDelta, null);
 	}
-	
-	
+
 }
