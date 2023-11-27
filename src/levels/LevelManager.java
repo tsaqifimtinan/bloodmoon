@@ -14,7 +14,6 @@ public class LevelManager {
 		this.game = game;
 		levelSpriteGround = LoadSave.getSpriteAtlas(LoadSave.level_atlas);
 		levelSpriteSky = LoadSave.getSpriteAtlas(LoadSave.sky_atlas);
-		
 	}
 
 	public void draw(Graphics g) {

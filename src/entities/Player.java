@@ -1,7 +1,6 @@
 package entities;
 
 import static util.Constants.Direction.*;
-import static util.Constants.PlayerConstants.GetSpriteAmount;
 import static util.Constants.PlayerConstants.*;
 
 import java.awt.Graphics;
@@ -20,6 +19,7 @@ public class Player extends Entity{
 	private boolean moving = false, attack = false;
 	private boolean left, up, right, down;
 	private float playerSpeed = 2.0f;
+	private int[][] lvlData;
 	
 	public Player(float x, float y, int width, int height, int scale) {
 		super(x, y, width, height, scale);
@@ -83,21 +83,27 @@ public class Player extends Entity{
 		moving = false;
 		
 		if (left && !right) {
-			x-=playerSpeed;
+			x -= playerSpeed;
 			moving = true;
 		}
 		else if (right && !left) {
-			x+=playerSpeed;
+			x += playerSpeed;
 			moving = true;
 		}
 		
 		if (up && !down) {
-			y-=playerSpeed;
-			moving = true;
+			float newY = y - playerSpeed;
+			if (newY >= 300) { // prevent player from going above y = 0
+				y = newY;
+				moving = true;
+			}
 		}
 		else if (down && !up) {
-			y+=playerSpeed;
-			moving = true;
+			float newY = y + playerSpeed;
+			if (newY <= 650) {
+				y = newY;
+				moving = true;
+			}
 		}
 	}
 	
@@ -154,6 +160,12 @@ public class Player extends Entity{
 	public void setDown(boolean down) {
 		this.down = down;
 	}
+
+	public void setY(float newY) {
+        this.y = y;
+    }
 	
-	
+	public float getY () {
+		return y;
+	}
 }

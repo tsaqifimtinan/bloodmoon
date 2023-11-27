@@ -32,7 +32,7 @@ public class GamePanel extends JPanel {
 	private void setPanelSize() {
 		Dimension size = new Dimension(game_width, game_height);
 		setPreferredSize(size);
-		System.out.println("Size: " + game_width + " : " + game_height);
+		System.out.println("Size: Width:" + game_width + " Height:" + game_height);
 	}
 	
 	public void paintComponent(Graphics g) {

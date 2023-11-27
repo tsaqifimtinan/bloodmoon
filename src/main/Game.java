@@ -1,7 +1,10 @@
 package main;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 
+import entities.Entity;
 import entities.Player;
 import levels.LevelManager;
 
@@ -14,6 +17,7 @@ public class Game implements Runnable {
 	private final int UPS_SET = 100;
 	private Player player;
 	private LevelManager levelManager;
+	private List<Entity> entities;
 	public final static int tiles_default_size = 64;
 	public final static int scale = 1;
 	public final static int tiles_in_width = 26;
@@ -24,7 +28,7 @@ public class Game implements Runnable {
 	
 
 	public Game() {
-		
+		entities = new ArrayList<>();
 		initialize();
 		gamePanel = new GamePanel(this);
 		gameWindow = new GameWindow(gamePanel);
@@ -33,8 +37,8 @@ public class Game implements Runnable {
 	}
 
 	private void initialize() {
-		player = new Player(200, 200, (int) 128 * scale, (int) 128 * scale, 2);
 		levelManager = new LevelManager(this);
+		player = new Player(200, 500, (int) 128 * scale, (int) 128 * scale, 2);
 	}
 
 	private void startGameLoop() {
@@ -45,11 +49,27 @@ public class Game implements Runnable {
 	public void update() {
 		player.update();
 		levelManager.update();
+		
+		// Update logic for entities
+        for (Entity entity : entities) {
+			player.update();
+		}
+	
+		// Check and restrict y-coordinate
+		float maxYLimit = game_height - 128; // Adjust this value as needed
+	
+		if (player.getY() > maxYLimit) {
+			player.setY(maxYLimit);
+		}
 	}
 	
 	public void render (Graphics g) {
 		levelManager.draw(g);
 		player.render(g);
+		
+		for (Entity entity : entities) {
+            player.render(g);
+        }
 	}
 
 	@Override
