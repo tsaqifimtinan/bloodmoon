@@ -9,7 +9,8 @@ import main.Game;
 
 public class LoadSave {
 	public static final String player_atlas = "Raider_3_Spritelist.png";
-	public static final String level_atlas = "Battleground1.png";
+	public static final String level_atlas = "stones&grass.png";
+	public static final String sky_atlas = "sky.png";
 	
 	
 	public static BufferedImage getSpriteAtlas (String fileName) {
@@ -29,8 +30,4 @@ public class LoadSave {
 		}
 		return img;
 	}
-	
-//	public static int[][] getLevelData() {
-//		int [][] lvlData = new int[Game.tiles_in_height][Game.tiles_in_width];
-//	}
 }

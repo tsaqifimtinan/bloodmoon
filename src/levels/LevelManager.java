@@ -8,15 +8,18 @@ import util.LoadSave;
 
 public class LevelManager {
 	private Game game;
-	private BufferedImage levelSprite;
+	private BufferedImage levelSpriteGround, levelSpriteSky;
 	
 	public LevelManager(Game game) {
 		this.game = game;
-		levelSprite = LoadSave.getSpriteAtlas(LoadSave.level_atlas);
+		levelSpriteGround = LoadSave.getSpriteAtlas(LoadSave.level_atlas);
+		levelSpriteSky = LoadSave.getSpriteAtlas(LoadSave.sky_atlas);
+		
 	}
 
 	public void draw(Graphics g) {
-		g.drawImage(levelSprite, 0, 0, null);
+		g.drawImage(levelSpriteSky, 0, 0, null);
+		g.drawImage(levelSpriteGround, 0, 0, null);
 	}
 	
 	public void update() {

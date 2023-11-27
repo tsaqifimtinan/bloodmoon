@@ -21,20 +21,22 @@ public class Player extends Entity{
 	private boolean left, up, right, down;
 	private float playerSpeed = 2.0f;
 	
-	public Player(float x, float y) {
-		super(x, y);
+	public Player(float x, float y, int width, int height, int scale) {
+		super(x, y, width, height, scale);
 		loadAnimations();
 		// TODO Auto-generated constructor stub
 	}
 	
 	public void update() {
 		updatePos();
+		updateHitBox();
 		updateAnimationTick();
 		setAnimation();
 	}
 	
 	public void render(Graphics g) {
-		g.drawImage(animations[playerAction][aniIndex], (int) x, (int) y, 256, 256, null);
+		g.drawImage(animations[playerAction][aniIndex], (int) x, (int) y, 128 * scale, 128 * scale, null);
+		drawHitBox(g);
 	}
 	
 	private void updateAnimationTick() {
