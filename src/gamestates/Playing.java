@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import entities.EnemyManager;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
@@ -11,6 +12,7 @@ import main.Game;
 public class Playing extends State implements Statemethods{
 	private Player player;
 	private LevelManager levelManager;
+	private EnemyManager enemyManager;
 	
 	public Playing(Game game) {
 		super(game);
@@ -20,6 +22,7 @@ public class Playing extends State implements Statemethods{
 
 	private void initialize() {
 		levelManager = new LevelManager(game);
+		enemyManager = new EnemyManager(this);
 		player = new Player(200, 500, (int) 128 * game.scale, (int) 128 * game.scale, 2);
 	}
 	
@@ -36,6 +39,7 @@ public class Playing extends State implements Statemethods{
 		// TODO Auto-generated method stub
 		levelManager.update();
 		player.update();
+		enemyManager.update();
 	}
 
 	@Override
@@ -43,6 +47,7 @@ public class Playing extends State implements Statemethods{
 		// TODO Auto-generated method stub
 		levelManager.draw(g);
 		player.render(g);
+		enemyManager.draw(g);
 	}
 
 	@Override
