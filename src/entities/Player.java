@@ -11,6 +11,8 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import util.LoadSave;
+
 public class Player extends Entity{
 	private BufferedImage[][] animations;
 	private int aniTick, aniIndex, aniSpeed = 8;
@@ -98,25 +100,12 @@ public class Player extends Entity{
 	}
 	
 	private void loadAnimations() {
-		InputStream is = getClass().getResourceAsStream("/Raider_3_Spritelist.png");
-		try {
-			BufferedImage img = ImageIO.read(is);
-			
-			animations = new BufferedImage[10][8];
-			
-			for (int j = 0; j < animations.length; j++) {
-				for (int i = 0; i < animations[j].length; i++) {
-					animations[j][i] = img.getSubimage(i*128, j*128, 128, 128);
-				}
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+		BufferedImage img = LoadSave.getSpriteAtlas(LoadSave.player_atlas);
+		animations = new BufferedImage[10][8];
+		
+		for (int j = 0; j < animations.length; j++) {
+			for (int i = 0; i < animations[j].length; i++) {
+				animations[j][i] = img.getSubimage(i*128, j*128, 128, 128);
 			}
 		}
 	}
