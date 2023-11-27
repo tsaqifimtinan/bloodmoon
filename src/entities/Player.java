@@ -100,7 +100,7 @@ public class Player extends Entity{
 		}
 		else if (down && !up) {
 			float newY = y + playerSpeed;
-			if (newY <= 650) {
+			if (newY <= 775) {
 				y = newY;
 				moving = true;
 			}
