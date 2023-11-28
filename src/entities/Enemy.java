@@ -3,6 +3,7 @@ package entities;
 import static util.Constants.EnemyConstants.*;
 
 import java.awt.Graphics;
+import java.util.Random;
 
 import main.Game;
 
@@ -14,6 +15,11 @@ public abstract class Enemy extends Entity{
 	private float walkSpeed = 1.0f;
 	protected int walkDir = left;
 	private EnemyManager enemyManager;
+	// Add a field to track the time in idle state
+	private int idleTimer = 0;
+	private int maxIdleTime = 50; // Adjust the maximum idle time as needed
+	private int runningTimer = 0;
+	private int maxRunningTime;
 	
 	public Enemy(float x, float y, int width, int height, int scale, int enemyType) {
 		super(x, y, width, height, scale);
@@ -38,53 +44,53 @@ public abstract class Enemy extends Entity{
 	}
 	
 	public void update() {
-		updateMove();
-		updateHitBox();
-		updateAnimationTick();
+	    updateMove();
+	    updateHitBox();
+	    updateAnimationTick();
 	}
-	
+
 	private void updateMove() {
 	    switch (enemyState) {
 	        case idle:
-	            enemyState = running;
+	            idleTimer++;
+	            if (idleTimer >= maxIdleTime) {
+	                idleTimer = 0;
+	                enemyState = running;
+	            }
 	            break;
 	        case running:
-	            float xSpeed = 0;
-	            float ySpeed = 0;
+	            runningTimer++; // Increment the running timer
 
-	            if (walkDir == right) {
-	                xSpeed = +walkSpeed;
-	                aniIndex = 1;
-	            } else if (walkDir == left) {
-	                xSpeed = -walkSpeed;
-	                aniIndex = 1;
-	            } else if (walkDir == up) {
-	                ySpeed = -walkSpeed;
-	                aniIndex = 1;
-	            } else if (walkDir == down) {
-	                ySpeed = +walkSpeed;
-	                aniIndex = 1;
-	            }
+	            float ySpeed = (float) (Math.random() * 2 * walkSpeed - walkSpeed);
+	            float xSpeed = -walkSpeed;
 
-	            // Update the x and y positions based on xSpeed and ySpeed
 	            x += xSpeed;
 	            y += ySpeed;
 
-	            // Wrap around the window horizontally
 	            if (x < -90) {
-	                x = Game.game_width; // Move to the right edge
+	                x = Game.game_width;
 	            } else if (x > Game.game_width) {
-	                x = -90; // Move to the left edge
+	                x = -90;
 	            }
 
-	            // Wrap around the window vertically
 	            if (y < 0) {
-	                y = Game.game_height; // Move to the bottom edge
+	                y = Game.game_height;
 	            } else if (y > Game.game_height) {
-	                y = 0; // Move to the top edge
+	                y = 0;
+	            }
+
+	            // Transition to idle state after reaching the maximum running time
+	            if (runningTimer >= setMaxTime()) {
+	                runningTimer = 0; // Reset the running timer
+	                enemyState = idle; // Transition to idle state
 	            }
 	            break;
 	    }
+	}
+
+	public int setMaxTime() {
+		Random random = new Random();
+		return maxRunningTime = random.nextInt(5000);
 	}
 	
 	public void render (Graphics g) {

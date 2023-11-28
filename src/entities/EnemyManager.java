@@ -22,7 +22,6 @@ public class EnemyManager {
 	        this.playing = playing;
 	        loadEnemyImg();
 	        addRaiders();
-	        scaleEnemyImages();
 	}
 	
 	private void addRaiders() {
@@ -47,27 +46,26 @@ public class EnemyManager {
 		drawRaiders(g);
 	}
 	
-	private void scaleEnemyImages() {
-        for (BufferedImage[] enemyStateImages : raider1Arr) {
-            BufferedImage[][] scaledImages = new BufferedImage[enemyStateImages.length][];
-            for (int i = 0; i < enemyStateImages.length; i++) {
-                int scaledWidth = enemyStateImages[i].getWidth() * 2;
-                int scaledHeight = enemyStateImages[i].getHeight() * 2;
-                scaledImages[i] = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
-                Graphics scaledGraphics = scaledImages[i].getGraphics();
-                scaledGraphics.drawImage(enemyStateImages[i], 0, 0, scaledWidth, scaledHeight, null);
-            }
-            scaledRaider1Arr.add(scaledImages);
-        }
-    }
-	
 	private void drawRaiders(Graphics g) {
-        for (int i = 0; i < raiders.size(); i++) {
-            Raider_1 r = raiders.get(i);
-            BufferedImage[][] scaledImages = scaledRaider1Arr.get(i);
-            g.drawImage(scaledImages[r.getEnemyState()][r.getAniIndex()], (int) r.getHitbox().x, (int) r.getHitbox().y, null);
-        }
-    }
+	    for (Raider_1 r : raiders) {
+	        BufferedImage enemyImage = raider1Arr[r.getEnemyState()][r.getAniIndex()];
+
+	        int flipDirection = (r.getWalkDir() == Direction.left) ? -1 : 1;
+
+	        BufferedImage flippedImage = flipImage(enemyImage, flipDirection);
+
+	        int flippedWidth = flippedImage.getWidth() * 2;
+	        int flippedHeight = flippedImage.getHeight() * 2;
+
+	        // Create a scaled instance of the image
+	        BufferedImage scaledImage = new BufferedImage(flippedWidth, flippedHeight, BufferedImage.TYPE_INT_ARGB);
+	        Graphics scaledGraphics = scaledImage.getGraphics();
+	        scaledGraphics.drawImage(flippedImage, 0, 0, flippedWidth, flippedHeight, null);
+
+	        // Draw the scaled image
+	        g.drawImage(scaledImage, (int) r.getHitbox().x, (int) r.getHitbox().y, null);
+	    }
+	}
 
 	private void loadEnemyImg() {
 		raider1Arr = new BufferedImage[10][12];
