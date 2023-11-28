@@ -55,6 +55,11 @@ public class Playing extends State implements Statemethods{
 		// TODO Auto-generated method stub
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			player.setAttack(true);
+			player.setGuard(false);
+		}
+		else if (e.getButton() == MouseEvent.BUTTON3) {
+			player.setGuard(true);
+			player.setAttack(false);
 		}
 	}
 
@@ -66,8 +71,7 @@ public class Playing extends State implements Statemethods{
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub 
 	}
 
 	@Override

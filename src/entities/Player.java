@@ -16,10 +16,9 @@ public class Player extends Entity{
 	private BufferedImage[][] animations;
 	private int aniTick, aniIndex, aniSpeed = 8;
 	private int playerAction = idle;
-	private boolean moving = false, attack = false;
+	private boolean moving = false, attack = false, guarding = false;
 	private boolean left, up, right, down;
 	private float playerSpeed = 2.0f;
-	private int[][] lvlData;
 	
 	public Player(float x, float y, int width, int height, int scale) {
 		super(x, y, width, height, scale);
@@ -68,6 +67,10 @@ public class Player extends Entity{
 			playerAction = attack_1;
 		}
 		
+		if (guarding) {
+			playerAction = guard;
+		}
+		
 		if (startAni != playerAction) {
 			resetAniTick();
 		}
@@ -93,7 +96,7 @@ public class Player extends Entity{
 		
 		if (up && !down) {
 			float newY = y - playerSpeed;
-			if (newY >= 300) { // prevent player from going above y = 0
+			if (newY >= 300) {
 				y = newY;
 				moving = true;
 			}
@@ -105,6 +108,8 @@ public class Player extends Entity{
 				moving = true;
 			}
 		}
+		
+		System.out.println("Player Position - X: " + x + ", Y: " + y);
 	}
 	
 	private void loadAnimations() {
@@ -123,6 +128,11 @@ public class Player extends Entity{
 		right = false;
 		up = false;
 		down = false;
+	}
+	
+	public void setGuard(boolean guarding) {
+		// TODO Auto-generated method stub
+		this.guarding = guarding;
 	}
 	
 	public void setAttack(boolean attack) {
@@ -168,4 +178,6 @@ public class Player extends Entity{
 	public float getY () {
 		return y;
 	}
+
+	
 }

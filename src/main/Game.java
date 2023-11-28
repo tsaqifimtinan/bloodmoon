@@ -23,8 +23,8 @@ public class Game implements Runnable {
 	private List<Entity> entities;
 	public final static int tiles_default_size = 64;
 	public final static int scale = 1;
-	public final static int tiles_in_width = 26;
-	public final static int tiles_in_height = 14;
+	public final static int tiles_in_width = 30;
+	public final static int tiles_in_height = 17;
 	public final static int tiles_size = (int) (tiles_default_size * scale);
 	public final static int game_width = tiles_size * tiles_in_width;
 	public final static int game_height = tiles_size * tiles_in_height;
@@ -113,7 +113,7 @@ public class Game implements Runnable {
 
 			if (System.currentTimeMillis() - lastCheck >= 1000) {
 				lastCheck = System.currentTimeMillis();
-				System.out.println("FPS: " + frames + " | UPS: " + updates);
+//				System.out.println("FPS: " + frames + " | UPS: " + updates);
 				frames = 0;
 				updates = 0;
 			}

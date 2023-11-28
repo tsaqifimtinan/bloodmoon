@@ -41,8 +41,8 @@ public class LoadSave {
 	    ArrayList<Raider_1> raiders = new ArrayList<>();
 	    Random random = new Random();
 	    for (int i = 0; i < 3; i++) {
-	        int x = random.nextInt(1000);
-	        int y = random.nextInt(476) + 300; // Adjusted range to ensure y is between 300 and 775
+	        int x = random.nextInt(500) + 800;
+	        int y = random.nextInt(476) + 100; // Adjusted range to ensure y is between 300 and 775
 	        Raider_1 raider = new Raider_1(x, y);
 	        raiders.add(raider);
 	    }

@@ -30,6 +30,9 @@ public class Constants {
 		public static final int raider_1_width = (int) (raider_1_width_default * 2);
 		public static final int raider_1_height = (int) (raider_1_height_default * 2);
 		
+		public static final int raider_1_drawoffset_x = 90;
+		public static final int raider_1_drawoffset_y = -120;
+		
 		public static int getSpriteAmount(int enemytype, int enemystate) {
 			switch(enemytype) {
 			case raider_1:
