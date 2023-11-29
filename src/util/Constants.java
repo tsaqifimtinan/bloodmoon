@@ -4,6 +4,48 @@ import main.Game;
 
 public class Constants {
 	
+	public static class Environment {
+		public static final int BIG_CLOUD_WIDTH_DEFAULT = 448;
+		public static final int BIG_CLOUD_HEIGHT_DEFAULT = 101;
+		public static final int SMALL_CLOUD_WIDTH_DEFAULT = 74;
+		public static final int SMALL_CLOUD_HEIGHT_DEFAULT = 24;
+
+		public static final int BIG_CLOUD_WIDTH = (int) (BIG_CLOUD_WIDTH_DEFAULT * Game.scale);
+		public static final int BIG_CLOUD_HEIGHT = (int) (BIG_CLOUD_HEIGHT_DEFAULT * Game.scale);
+		public static final int SMALL_CLOUD_WIDTH = (int) (SMALL_CLOUD_WIDTH_DEFAULT * Game.scale);
+		public static final int SMALL_CLOUD_HEIGHT = (int) (SMALL_CLOUD_HEIGHT_DEFAULT * Game.scale);
+	}
+	
+	public static class UI {
+		public static class Buttons {
+			public static final int B_WIDTH_DEFAULT = 140;
+			public static final int B_HEIGHT_DEFAULT = 56;
+			public static final int B_WIDTH = (int) (B_WIDTH_DEFAULT * Game.scale);
+			public static final int B_HEIGHT = (int) (B_HEIGHT_DEFAULT * Game.scale);
+		}
+
+		public static class PauseButtons {
+			public static final int SOUND_SIZE_DEFAULT = 42;
+			public static final int SOUND_SIZE = (int) (SOUND_SIZE_DEFAULT * Game.scale);
+		}
+
+		public static class URMButtons {
+			public static final int URM_DEFAULT_SIZE = 56;
+			public static final int URM_SIZE = (int) (URM_DEFAULT_SIZE * Game.scale);
+
+		}
+
+		public static class VolumeButtons {
+			public static final int VOLUME_DEFAULT_WIDTH = 28;
+			public static final int VOLUME_DEFAULT_HEIGHT = 44;
+			public static final int SLIDER_DEFAULT_WIDTH = 215;
+
+			public static final int VOLUME_WIDTH = (int) (VOLUME_DEFAULT_WIDTH * Game.scale);
+			public static final int VOLUME_HEIGHT = (int) (VOLUME_DEFAULT_HEIGHT * Game.scale);
+			public static final int SLIDER_WIDTH = (int) (SLIDER_DEFAULT_WIDTH * Game.scale);
+		}
+	}
+	
 	public static class Direction {
 		public static final int up = 0;
 		public static final int left = 1;
@@ -13,6 +55,7 @@ public class Constants {
 	
 	public static class EnemyConstants {
 		public static final int raider_1 = 0;
+		
 		public static final int idle = 0;
 		public static final int walking = 1;
 		public static final int running = 2;
@@ -23,15 +66,15 @@ public class Constants {
 		public static final int jump = 7;
 		public static final int hurt = 8;
 		public static final int die = 9;
+		// temp width and height
+		public static final int raider_1_width_default = 72;
+		public static final int raider_1_height_default = 32;
 		
-		public static final int raider_1_width_default = 128;
-		public static final int raider_1_height_default = 128;
+		public static final int raider_1_width = (int) (raider_1_width_default * Game.scale);
+		public static final int raider_1_height = (int) (raider_1_height_default * Game.scale);
 		
-		public static final int raider_1_width = (int) (raider_1_width_default * 2);
-		public static final int raider_1_height = (int) (raider_1_height_default * 2);
-		
-		public static final int raider_1_drawoffset_x = 90;
-		public static final int raider_1_drawoffset_y = -120;
+		public static final int raider_1_drawoffset_x = (int) (30 * Game.scale);
+		public static final int raider_1_drawoffset_y = (int) (-30 * Game.scale);
 		
 		public static int getSpriteAmount(int enemytype, int enemystate) {
 			switch(enemytype) {
@@ -76,7 +119,7 @@ public class Constants {
 			
 			switch(player_action) {
 			case idle:
-				return 6;
+				return 5;
 			case walking:
 				return 7;
 			case running:

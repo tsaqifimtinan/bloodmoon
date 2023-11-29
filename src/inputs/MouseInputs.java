@@ -18,39 +18,72 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
+		switch (Gamestate.state) {
+		case playing:
+			gamePanel.getGame().getPlaying().mouseDragged(e);
+			break;
+		default:
+			break;
 
+		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		
+		switch (Gamestate.state) {
+		case menu:
+			gamePanel.getGame().getMenu().mouseMoved(e);
+			break;
+		case playing:
+			gamePanel.getGame().getPlaying().mouseMoved(e);
+			break;
+		default:
+			break;
+
+		}
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		switch(Gamestate.state) {
-		case menu:
-			gamePanel.getGame().getMenu().mouseClicked(e);
-			break;
 		case playing:
 			gamePanel.getGame().getPlaying().mouseClicked(e);
 			break;
 		default:
 			break;
-		
 		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
+		switch (Gamestate.state) {
+		case menu:
+			gamePanel.getGame().getMenu().mousePressed(e);
+			break;
+		case playing:
+			gamePanel.getGame().getPlaying().mousePressed(e);
+			break;
+		default:
+			break;
 
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
+		switch (Gamestate.state) {
+		case menu:
+			gamePanel.getGame().getMenu().mouseReleased(e);
+			break;
+		case playing:
+			gamePanel.getGame().getPlaying().mouseReleased(e);
+			break;
+		default:
+			break;
 
+		}
 	}
 
 	@Override

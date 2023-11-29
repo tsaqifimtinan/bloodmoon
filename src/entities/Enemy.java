@@ -1,108 +1,125 @@
 package entities;
 
 import static util.Constants.EnemyConstants.*;
-
-import java.awt.Graphics;
-import java.util.Random;
+import static util.HelpMethods.*;
+import static util.Constants.Direction.*;
 
 import main.Game;
 
-import static util.Constants.Direction.*;
-
-public abstract class Enemy extends Entity{
+public abstract class Enemy extends Entity {
 	protected int aniIndex, enemyState, enemyType;
-	private int aniTick, aniSpeed = 8;
-	private float walkSpeed = 1.0f;
+	protected int aniTick, aniSpeed = 25;
+	protected boolean firstUpdate = true;
+	protected boolean inAir;
+	protected float fallSpeed;
+	protected float gravity = 0.04f * Game.scale;
+	protected float walkSpeed = 0.35f * Game.scale;
 	protected int walkDir = left;
-	private EnemyManager enemyManager;
-	// Add a field to track the time in idle state
-	private int idleTimer = 0;
-	private int maxIdleTime = 50; // Adjust the maximum idle time as needed
-	private int runningTimer = 0;
-	private int maxRunningTime;
-	
-	public Enemy(float x, float y, int width, int height, int scale, int enemyType) {
-		super(x, y, width, height, scale);
-	    this.enemyType = enemyType;
-	    this.aniIndex = 0; // Initialize aniIndex
-	    this.enemyState = idle; // Initialize enemyState
-	    initHitbox(x, y, width, height);
-		// TODO Auto-generated constructor stub
+	protected int tileY;
+	protected float attackDistance = Game.tiles_size;
+
+	public Enemy(float x, float y, int width, int height, int enemyType) {
+		super(x, y, width, height);
+		this.enemyType = enemyType;
+		initHitbox(x, y, width, height);
 	}
-	
-	private void updateAnimationTick() {
+
+	protected void firstUpdateCheck(int[][] lvlData) {
+		if (!IsEntityOnFloor(hitbox, lvlData))
+			inAir = true;
+		firstUpdate = false;
+	}
+
+	protected void updateInAir(int[][] lvlData) {
+		if (CanMoveHere(hitbox.x, hitbox.y + fallSpeed, hitbox.width, hitbox.height, lvlData)) {
+			hitbox.y += fallSpeed;
+			fallSpeed += gravity;
+		} else {
+			inAir = false;
+			hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, fallSpeed);
+			tileY = (int) (hitbox.y / Game.tiles_size);
+		}
+	}
+
+	protected void move(int[][] lvlData) {
+		float xSpeed = 0;
+
+		if (walkDir == left)
+			xSpeed = -walkSpeed;
+		else
+			xSpeed = walkSpeed;
+
+		if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData))
+			if (IsFloor(hitbox, xSpeed, lvlData)) {
+				hitbox.x += xSpeed;
+				return;
+			}
+
+		changeWalkDir();
+	}
+
+	protected void turnTowardsPlayer(Player player) {
+		if (player.hitbox.x > hitbox.x)
+			walkDir = right;
+		else
+			walkDir = left;
+	}
+
+	protected boolean canSeePlayer(int[][] lvlData, Player player) {
+		int playerTileY = (int) (player.getHitbox().y / Game.tiles_size);
+		if (playerTileY == tileY)
+			if (isPlayerInRange(player)) {
+				if (IsSightClear(lvlData, hitbox, player.hitbox, tileY))
+					return true;
+			}
+
+		return false;
+	}
+
+	protected boolean isPlayerInRange(Player player) {
+		int absValue = (int) Math.abs(player.hitbox.x - hitbox.x);
+		return absValue <= attackDistance * 5;
+	}
+
+	protected boolean isPlayerCloseForAttack(Player player) {
+		int absValue = (int) Math.abs(player.hitbox.x - hitbox.x);
+		return absValue <= attackDistance;
+	}
+
+	protected void newState(int enemyState) {
+		this.enemyState = enemyState;
+		aniTick = 0;
+		aniIndex = 0;
+	}
+
+	protected void updateAnimationTick() {
 		aniTick++;
-		
 		if (aniTick >= aniSpeed) {
 			aniTick = 0;
 			aniIndex++;
-			
-			if(aniIndex >= getSpriteAmount(enemyType, enemyState)) {
+			if (aniIndex >= getSpriteAmount(enemyType, enemyState)) {
 				aniIndex = 0;
+				if(enemyState == attack_1)
+					enemyState = idle;
+					
 			}
 		}
 	}
-	
-	public void update() {
-	    updateMove();
-	    updateHitBox();
-	    updateAnimationTick();
-	}
 
-	private void updateMove() {
-	    switch (enemyState) {
-	        case idle:
-	            idleTimer++;
-	            if (idleTimer >= maxIdleTime) {
-	                idleTimer = 0;
-	                enemyState = running;
-	            }
-	            break;
-	        case running:
-	            runningTimer++; // Increment the running timer
+	protected void changeWalkDir() {
+		if (walkDir == left)
+			walkDir = right;
+		else
+			walkDir = left;
 
-	            float ySpeed = (float) (Math.random() * 2 * walkSpeed - walkSpeed);
-	            float xSpeed = -walkSpeed;
-
-	            x += xSpeed;
-	            y += ySpeed;
-
-	            if (x < -90) {
-	                x = Game.game_width;
-	            } else if (x > Game.game_width) {
-	                x = -90;
-	            }
-
-	            if (y < 0) {
-	                y = Game.game_height;
-	            } else if (y > Game.game_height) {
-	                y = 0;
-	            }
-
-	            // Transition to idle state after reaching the maximum running time
-	            if (runningTimer >= setMaxTime()) {
-	                runningTimer = 0; // Reset the running timer
-	                enemyState = idle; // Transition to idle state
-	            }
-	            break;
-	    }
-	}
-
-	public int setMaxTime() {
-		Random random = new Random();
-		return maxRunningTime = random.nextInt(5000);
-	}
-	
-	public void render (Graphics g) {
-		drawHitBox(g);
 	}
 
 	public int getAniIndex() {
 		return aniIndex;
 	}
-	
+
 	public int getEnemyState() {
 		return enemyState;
 	}
-	
+
 }

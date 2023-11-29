@@ -16,73 +16,41 @@ public class EnemyManager {
 	private Playing playing;
     private BufferedImage[][] raider1Arr;
     private ArrayList<Raider_1> raiders = new ArrayList<>();
-    private ArrayList<BufferedImage[][]> scaledRaider1Arr = new ArrayList<>();
     
-	public EnemyManager(Playing playing) {
-	        this.playing = playing;
-	        loadEnemyImg();
-	        addRaiders();
+    public EnemyManager(Playing playing) {
+		this.playing = playing;
+		loadEnemyImgs();
+		addEnemies();
 	}
-	
-	private void addRaiders() {
-		// TODO Auto-generated method stub
+
+	private void addEnemies() {
 		raiders = LoadSave.getRaiders();
-		System.out.println("Numbers of Raiders: " + raiders.size());
+
 	}
 
-	public void update() {
-		for (Raider_1 r : raiders) {
-			r.update();
+	public void update(int[][] lvlData, Player player) {
+		for (Raider_1 c : raiders)
+			c.update(lvlData, player);
+	}
+
+	public void draw(Graphics g, int xLvlOffset) {
+		drawRaiders(g, xLvlOffset);
+	}
+
+	private void drawRaiders(Graphics g, int xLvlOffset) {
+		for (Raider_1 c : raiders) {
+			g.drawImage(raider1Arr[c.getEnemyState()][c.getAniIndex()], (int) c.getHitbox().x - xLvlOffset - raider_1_drawoffset_x, (int) c.getHitbox().y - raider_1_drawoffset_y, raider_1_width, 
+					raider_1_height, null);
+//			c.drawHitbox(g, xLvlOffset);
 		}
-		
+
 	}
 
-	private Raider_1[] getRaiders() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void draw(Graphics g) {
-		drawRaiders(g);
-	}
-	
-	private void drawRaiders(Graphics g) {
-	    for (Raider_1 r : raiders) {
-	        BufferedImage enemyImage = raider1Arr[r.getEnemyState()][r.getAniIndex()];
-
-	        int flipDirection = (r.getWalkDir() == Direction.left) ? -1 : 1;
-
-	        BufferedImage flippedImage = flipImage(enemyImage, flipDirection);
-
-	        int flippedWidth = flippedImage.getWidth() * 2;
-	        int flippedHeight = flippedImage.getHeight() * 2;
-
-	        // Create a scaled instance of the image
-	        BufferedImage scaledImage = new BufferedImage(flippedWidth, flippedHeight, BufferedImage.TYPE_INT_ARGB);
-	        Graphics scaledGraphics = scaledImage.getGraphics();
-	        scaledGraphics.drawImage(flippedImage, 0, 0, flippedWidth, flippedHeight, null);
-
-	        // Draw the scaled image
-	        g.drawImage(scaledImage, (int) r.getHitbox().x, (int) r.getHitbox().y, null);
-	    }
-	}
-
-	private void loadEnemyImg() {
-		raider1Arr = new BufferedImage[10][12];
+	private void loadEnemyImgs() {
+		raider1Arr = new BufferedImage[5][9];
 		BufferedImage temp = LoadSave.getSpriteAtlas(LoadSave.raider_1_atlas);
-		
-		for (int j = 0; j < raider1Arr.length; j++) {
-			for (int i = 0; i < raider1Arr[j].length; i++) {
-				raider1Arr[j][i] = temp.getSubimage(i * raider_1_width_default, j * raider_1_width_default, raider_1_width_default, raider_1_width_default);
-			}
-		}
+		for (int j = 0; j < raider1Arr.length; j++)
+			for (int i = 0; i < raider1Arr[j].length; i++)
+				raider1Arr[j][i] = temp.getSubimage(i * raider_1_width_default, j * raider_1_height_default, raider_1_width_default, raider_1_height_default);
 	}
-	
-	private BufferedImage flipImage(BufferedImage image, int direction) {
-        AffineTransform tx = AffineTransform.getScaleInstance(direction, 1);
-        tx.translate((direction - 1) * image.getWidth(), 0);
-
-        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-        return op.filter(image, null);
-    }
 }

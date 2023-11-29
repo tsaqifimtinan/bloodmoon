@@ -20,26 +20,26 @@ public class Game implements Runnable {
 	private final int UPS_SET = 100;
 	private Playing playing;
 	private Menu menu;
-	private List<Entity> entities;
-	public final static int tiles_default_size = 64;
-	public final static int scale = 1;
-	public final static int tiles_in_width = 30;
-	public final static int tiles_in_height = 17;
+	public final static int tiles_default_size = 32;
+	public final static float scale = 2f;
+	public final static int tiles_in_width = 26;
+	public final static int tiles_in_height = 14;
 	public final static int tiles_size = (int) (tiles_default_size * scale);
 	public final static int game_width = tiles_size * tiles_in_width;
 	public final static int game_height = tiles_size * tiles_in_height;
 	
-
 	public Game() {
-		entities = new ArrayList<>();
-		initialize();
+		initClasses();
+
 		gamePanel = new GamePanel(this);
 		gameWindow = new GameWindow(gamePanel);
 		gamePanel.requestFocus();
+
 		startGameLoop();
+
 	}
-	
-	private void initialize() {
+
+	private void initClasses() {
 		menu = new Menu(this);
 		playing = new Playing(this);
 	}
@@ -48,22 +48,26 @@ public class Game implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
-	
+
 	public void update() {
-		switch(Gamestate.state) {
+		switch (Gamestate.state) {
 		case menu:
 			menu.update();
 			break;
 		case playing:
 			playing.update();
 			break;
+		case options:
+		case quit:
 		default:
+			System.exit(0);
 			break;
+
 		}
 	}
-	
-	public void render (Graphics g) {
-		switch(Gamestate.state) {
+
+	public void render(Graphics g) {
+		switch (Gamestate.state) {
 		case menu:
 			menu.draw(g);
 			break;
@@ -80,31 +84,29 @@ public class Game implements Runnable {
 
 		double timePerFrame = 1000000000.0 / FPS_SET;
 		double timePerUpdate = 1000000000.0 / UPS_SET;
-		long lastFrame = System.nanoTime();
-		long now = System.nanoTime();
+
 		long previousTime = System.nanoTime();
-		
+
 		int frames = 0;
 		int updates = 0;
 		long lastCheck = System.currentTimeMillis();
-		
+
 		double deltaU = 0;
 		double deltaF = 0;
 
 		while (true) {
-			now = System.nanoTime();
 			long currentTime = System.nanoTime();
 
 			deltaU += (currentTime - previousTime) / timePerUpdate;
 			deltaF += (currentTime - previousTime) / timePerFrame;
 			previousTime = currentTime;
-			
+
 			if (deltaU >= 1) {
 				update();
 				updates++;
 				deltaU--;
 			}
-			
+
 			if (deltaF >= 1) {
 				gamePanel.repaint();
 				frames++;
@@ -113,24 +115,24 @@ public class Game implements Runnable {
 
 			if (System.currentTimeMillis() - lastCheck >= 1000) {
 				lastCheck = System.currentTimeMillis();
-//				System.out.println("FPS: " + frames + " | UPS: " + updates);
+				System.out.println("FPS: " + frames + " | UPS: " + updates);
 				frames = 0;
 				updates = 0;
+
 			}
 		}
 
 	}
-	
+
 	public void windowFocusLost() {
-		if(Gamestate.state == Gamestate.playing) {
+		if (Gamestate.state == Gamestate.playing)
 			playing.getPlayer().resetDirBooleans();
-		}
 	}
-	
+
 	public Menu getMenu() {
 		return menu;
 	}
-	
+
 	public Playing getPlaying() {
 		return playing;
 	}
