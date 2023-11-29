@@ -16,8 +16,8 @@ public class Player extends Entity {
 	private boolean left, up, right, down, jump;
 	private float playerSpeed = 1.0f * Game.scale;
 	private int[][] lvlData;
-//	private float xDrawOffset = 21 * Game.scale;
-//	private float yDrawOffset = 4 * Game.scale;
+	private float xDrawOffset = 21 * Game.scale;
+	private float yDrawOffset = 4 * Game.scale;
 
 	// Jumping / Gravity
 	private float airSpeed = 0f;
@@ -29,7 +29,7 @@ public class Player extends Entity {
 	public Player(float x, float y, int width, int height) {
 		super(x, y, width, height);
 		loadAnimations();
-		initHitbox(x, y, 30, 90);
+		initHitbox(x, y, (int) (20 * Game.scale), (int) (27 * Game.scale));
 
 	}
 
@@ -40,8 +40,8 @@ public class Player extends Entity {
 	}
 
 	public void render(Graphics g, int lvlOffset) {
-		g.drawImage(animations[playerAction][aniIndex], (int) hitbox.x, (int) hitbox.y, width, height, null);
-//		drawHitbox(g, lvlOffset);
+		g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset, (int) (hitbox.y - yDrawOffset), width, height, null);
+		drawHitbox(g, lvlOffset);
 	}
 
 	private void updateAnimationTick() {
@@ -68,9 +68,9 @@ public class Player extends Entity {
 
 		if (inAir) {
 			if (airSpeed < 0)
-				playerAction = attack_jump;
+				playerAction = jumping;
 			else
-				playerAction = hurt;
+				playerAction = idle;
 		}
 
 		if (attacking)
@@ -152,10 +152,10 @@ public class Player extends Entity {
 
 		BufferedImage img = LoadSave.getSpriteAtlas(LoadSave.player_atlas);
 
-		animations = new BufferedImage[10][8];
+		animations = new BufferedImage[9][6];
 		for (int j = 0; j < animations.length; j++)
 			for (int i = 0; i < animations[j].length; i++)
-				animations[j][i] = img.getSubimage(i * 128, j * 128, 128, 128);
+				animations[j][i] = img.getSubimage(i * 64, j * 40, 64, 40);
 
 	}
 

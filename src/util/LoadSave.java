@@ -17,7 +17,7 @@ import entities.Raider_1;
 import main.Game;
 
 public class LoadSave {
-	public static final String player_atlas = "Raider_3_Spritelist.png";
+	public static final String player_atlas = "player_sprites.png";
 	public static final String level_atlas = "outside_sprites.png";
 	public static final String sky_atlas = "sky.png";
 	// temp sprite
