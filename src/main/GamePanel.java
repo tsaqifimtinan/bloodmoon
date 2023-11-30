@@ -13,8 +13,6 @@ import inputs.KeyboardInputs;
 import inputs.MouseInputs;
 import static util.Constants.PlayerConstants.*;
 import static util.Constants.Direction.*;
-import static main.Game.GAME_HEIGHT;
-import static main.Game.GAME_WIDTH;
 import static main.Game.game_height;
 import static main.Game.game_width;
 
