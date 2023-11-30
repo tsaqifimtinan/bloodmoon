@@ -19,7 +19,6 @@ import main.Game;
 public class LoadSave {
 	public static final String player_atlas = "player_sprites.png";
 	public static final String level_atlas = "outside_sprites.png";
-	public static final String sky_atlas = "sky.png";
 	// temp sprite
 	public static final String raider_1_atlas = "crabby_sprite.png";
 	
@@ -31,7 +30,7 @@ public class LoadSave {
 	public static final String urm_buttons = "urm_buttons.png";
 	public static final String volume_buttons = "volume_buttons.png";
 	public static final String menu_background_img = "background_menu.png";
-	public static final String playing_bg_img = "playing_bg_img.png";
+	public static final String playing_bg_img = "sky.png";
 	public static final String big_clouds = "big_clouds.png";
 	public static final String small_clouds = "small_clouds.png";
 	

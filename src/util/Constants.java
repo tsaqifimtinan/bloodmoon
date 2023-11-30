@@ -55,17 +55,18 @@ public class Constants {
 	
 	public static class EnemyConstants {
 		public static final int raider_1 = 0;
-		
+		// basic crabby states
 		public static final int idle = 0;
-		public static final int walking = 1;
-		public static final int running = 2;
+		public static final int running = 1;
+		public static final int attack_1 = 2;
+		public static final int hurt = 3;
+		public static final int die = 4;
+		
 		public static final int shot = 3;
-		public static final int attack_1 = 4;
 		public static final int attack_2 = 5;
 		public static final int reload = 6;
 		public static final int jump = 7;
-		public static final int hurt = 8;
-		public static final int die = 9;
+		
 		// temp width and height
 		public static final int raider_1_width_default = 72;
 		public static final int raider_1_height_default = 32;
@@ -81,22 +82,15 @@ public class Constants {
 			case raider_1:
 				switch(enemystate) {
 				case idle:
-				case attack_1:
-					return 6;
-				case walking:
+					return 9;
 				case running:
-					return 8;
-				case shot:
-				case reload:
-					return 12;
-				case attack_2:
-					return 3;
-				case jump:
-					return 11;
+					return 6;
+				case attack_1:
+					return 7;
 				case hurt:
-					return 2;
-				case die:
 					return 4;
+				case die:
+					return 5;
 				}
 			}
 			return 0;
