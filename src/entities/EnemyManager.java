@@ -25,9 +25,9 @@ public class EnemyManager {
 
 	}
 
-	public void update(int[][] lvlData) {
+	public void update(int[][] lvlData, Player player) {
 		for (Raider_1 c : raiders)
-			c.update(lvlData);
+			c.update(lvlData, player);
 	}
 
 	public void draw(Graphics g, int xLvlOffset) {
