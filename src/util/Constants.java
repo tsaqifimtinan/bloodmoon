@@ -74,8 +74,8 @@ public class Constants {
 		public static final int raider_1_width = (int) (raider_1_width_default * Game.scale);
 		public static final int raider_1_height = (int) (raider_1_height_default * Game.scale);
 		
-		public static final int raider_1_drawoffset_x = (int) (30 * Game.scale);
-		public static final int raider_1_drawoffset_y = (int) (-30 * Game.scale);
+		public static final int raider_1_drawoffset_x = (int) (26 * Game.scale);
+		public static final int raider_1_drawoffset_y = (int) (9 * Game.scale);
 		
 		public static int getSpriteAmount(int enemytype, int enemystate) {
 			switch(enemytype) {

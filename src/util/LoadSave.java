@@ -29,7 +29,7 @@ public class LoadSave {
 	public static final String sound_buttons = "sound_button.png";
 	public static final String urm_buttons = "urm_buttons.png";
 	public static final String volume_buttons = "volume_buttons.png";
-	public static final String menu_background_img = "background_menu.png";
+	public static final String menu_background_img = "sky.png";
 	public static final String playing_bg_img = "sky.png";
 	public static final String big_clouds = "big_clouds.png";
 	public static final String small_clouds = "small_clouds.png";
