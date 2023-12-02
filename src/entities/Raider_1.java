@@ -56,11 +56,10 @@ public class Raider_1 extends Enemy {
 			case running:
 				if(canSeePlayer (lvlData, player)) {
 					turnTowardsPlayer (player);
+					if(isPlayerCloseForAttack (player)) {
+						newState(attack_1);
+					}
 				}
-				if(isPlayerCloseForAttack (player)) {
-					newState(attack_1);
-				}
-				
 				move(lvlData);
 				break;
 			case attack_1:

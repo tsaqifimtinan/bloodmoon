@@ -16,7 +16,7 @@ public class Player extends Entity {
 	private BufferedImage[][] animations;
 	private int aniTick, aniIndex, aniSpeed = 25;
 	private int playerAction = idle;
-	private boolean moving = false, attacking = false;
+	private boolean moving = false, attacking = false, taunting = false;
 	private boolean left, up, right, down, jump;
 	private float playerSpeed = 1.0f * Game.scale;
 	private int[][] lvlData;
@@ -152,6 +152,21 @@ public class Player extends Entity {
 			else
 				playerAction = idle;
 		}
+		
+		if (taunting) {
+	        playerAction = taunt;
+	        if (startAni != taunt) {
+	            aniIndex = 0;
+	            aniTick = 0;
+	            return;
+	        }
+
+	        if (aniIndex == GetSpriteAmount(taunt) - 1) {
+	            // Taunt animation has finished
+	            taunting = false;
+	            playerAction = idle;
+	        }
+		}
 
 		if (attacking) {
 			playerAction = attack_1;
@@ -161,7 +176,7 @@ public class Player extends Entity {
 				return;
 			}
 		}
-		
+
 		if (currentHealth <= 0) {
 			playerAction = die;
 		}
@@ -284,6 +299,10 @@ public class Player extends Entity {
 
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
+	}
+	
+	public void setTaunting(boolean taunting) {
+		this.taunting = taunting;
 	}
 
 	public boolean isLeft() {
