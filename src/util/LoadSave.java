@@ -17,7 +17,7 @@ import entities.Raider_1;
 import main.Game;
 
 public class LoadSave {
-	public static final String player_atlas = "player_sprites.png";
+	public static final String player_atlas = "Raider_3_Spritelist.png";
 	public static final String level_atlas = "outside_sprites.png";
 	// temp sprite
 	public static final String raider_1_atlas = "crabby_sprite.png";
@@ -29,11 +29,11 @@ public class LoadSave {
 	public static final String sound_buttons = "sound_button.png";
 	public static final String urm_buttons = "urm_buttons.png";
 	public static final String volume_buttons = "volume_buttons.png";
-	public static final String menu_background_img = "sky.png";
+	public static final String menu_background_img = "Battleground1.png";
 	public static final String playing_bg_img = "sky.png";
 	public static final String big_clouds = "big_clouds.png";
 	public static final String small_clouds = "small_clouds.png";
-	
+	public static final String status_bar = "health_power_bar.png";
 	
 	public static BufferedImage getSpriteAtlas (String fileName) {
 		BufferedImage img = null;

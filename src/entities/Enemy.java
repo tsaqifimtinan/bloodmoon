@@ -16,7 +16,7 @@ public abstract class Enemy extends Entity {
 	protected boolean inAir;
 	protected float fallSpeed;
 	protected float gravity = 0.04f * Game.scale;
-	protected float walkSpeed = 0.35f * Game.scale;
+	protected float walkSpeed = 0.25f * Game.scale;
 	protected int walkDir = left;
 	protected int tileY;
 	protected float attackDistance = Game.tiles_size;
