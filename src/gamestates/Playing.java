@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Float;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
@@ -32,6 +34,7 @@ public class Playing extends State implements Statemethods {
 	private BufferedImage backgroundImg, bigCloud, smallCloud;
 	private int[] smallCloudsPos;
 	private Random rnd = new Random();
+	private boolean gameOver;
 
 	public Playing(Game game) {
 		super(game);
@@ -48,7 +51,7 @@ public class Playing extends State implements Statemethods {
 	private void initClasses() {
 		levelManager = new LevelManager(game);
 		enemyManager = new EnemyManager(this);
-		player = new Player(200, 250, (int) (96 * Game.scale), (int) (96 * Game.scale));
+		player = new Player(200, 250, (int) (96 * Game.scale), (int) (96 * Game.scale), this);
 		player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 		pauseOverlay = new PauseOverlay(this);
 	}
@@ -106,6 +109,13 @@ public class Playing extends State implements Statemethods {
 		for (int i = 0; i < smallCloudsPos.length; i++)
 			g.drawImage(smallCloud, SMALL_CLOUD_WIDTH * 4 * i - (int) (xLvlOffset * 0.7), smallCloudsPos[i], SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
 
+	}
+	
+	public void resetAll() {
+		gameOver = false;
+		paused = false;
+		player.resetAll();
+		enemyManager.resetAllEnemies();
 	}
 
 	@Override
@@ -184,6 +194,11 @@ public class Playing extends State implements Statemethods {
 
 	public Player getPlayer() {
 		return player;
+	}
+
+	public void checkPlayerHit(Rectangle2D.Float attackBox) {
+		// TODO Auto-generated method stub
+		enemyManager.checkEnemyHit(attackBox);
 	}
 
 }

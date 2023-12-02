@@ -3,6 +3,7 @@ package entities;
 import static util.Constants.EnemyConstants.*;
 import static util.HelpMethods.*;
 
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Float;
 
 import static util.Constants.Direction.*;
@@ -20,11 +21,17 @@ public abstract class Enemy extends Entity {
 	protected int walkDir = left;
 	protected int tileY;
 	protected float attackDistance = Game.tiles_size;
+	protected int maxHealth;
+	protected int currentHealth;
+	protected boolean active = true;
+	protected boolean attackChecked;
 
 	public Enemy(float x, float y, int width, int height, int enemyType) {
 		super(x, y, width, height);
 		this.enemyType = enemyType;
 		initHitbox(x, y, width, height);
+		maxHealth = getMaxHealth(enemyType);
+		currentHealth = maxHealth;
 	}
 	
 	protected void firstUpdateCheck(int[][] lvlData) {
@@ -108,8 +115,10 @@ public abstract class Enemy extends Entity {
 			aniIndex++;
 			if (aniIndex >= getSpriteAmount(enemyType, enemyState)) {
 				aniIndex = 0;
-				if(enemyState == attack_1) {
-					enemyState= idle;
+				
+				switch(enemyState) {
+				case attack_1, hurt -> enemyState = idle;
+				case die -> active = false;
 				}
 			}
 		}
@@ -122,6 +131,35 @@ public abstract class Enemy extends Entity {
 			walkDir = left;
 
 	}
+	
+	public void resetEnemy() {
+		hitbox.x = x;
+		hitbox.y = y;
+		firstUpdate = true;
+		currentHealth = maxHealth;
+		newState(idle);
+		active = true;
+		fallSpeed = 0;
+	}
+	
+	public void hurt(int amount) {
+		currentHealth -= amount;
+		if(currentHealth <= 0) {
+			newState(die);
+		}
+		
+		else {
+			newState(hurt);
+		}
+	}
+	
+	protected void checkPlayerHit(Rectangle2D.Float attackBox, Player player) {
+		if(attackBox.intersects(player.hitbox)) {
+			player.changeHealth(-getEnemyDmg(enemyType));
+		}
+		
+		attackChecked = true;
+	}
 
 	public int getAniIndex() {
 		return aniIndex;
@@ -129,6 +167,10 @@ public abstract class Enemy extends Entity {
 
 	public int getEnemyState() {
 		return enemyState;
+	}
+	
+	public boolean isActive() {
+		return active;
 	}
 
 }

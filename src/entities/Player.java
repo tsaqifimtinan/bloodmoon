@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import gamestates.Playing;
 import main.Game;
 import util.LoadSave;
 
@@ -19,7 +20,7 @@ public class Player extends Entity {
 	private boolean left, up, right, down, jump;
 	private float playerSpeed = 1.0f * Game.scale;
 	private int[][] lvlData;
-	private float xDrawOffset = 35 * Game.scale;
+	private float xDrawOffset = 40 * Game.scale;
 	private float yDrawOffset = 65 * Game.scale;
 
 	// Jumping / Gravity
@@ -43,9 +44,14 @@ public class Player extends Entity {
 	private int healthWidth = healthBarWidth;
 	
 	private Rectangle2D.Float attackBox;
+	private int flipX = 0;
+	private int flipW = 1;
+	private boolean attackChecked;
+	private Playing playing;
 
-	public Player(float x, float y, int width, int height) {
+	public Player(float x, float y, int width, int height, Playing playing) {
 		super(x, y, width, height);
+		this.playing = playing;
 		loadAnimations();
 		initHitbox(x, y, (int) (15 * Game.scale), (int) (28 * Game.scale));
 		initAttackBox();
@@ -60,8 +66,20 @@ public class Player extends Entity {
 		updateHealthBar();
 		updateAttackBox();
 		updatePos();
+		if(attacking)
+			checkAttack();
 		updateAnimationTick();
 		setAnimation();
+	}
+
+	private void checkAttack() {
+		// TODO Auto-generated method stub
+		if(attackChecked || aniIndex != 1) {
+			return;
+		}
+		
+		attackChecked = true;
+		playing.checkPlayerHit(attackBox);
 	}
 
 	private void updateAttackBox() {
@@ -83,22 +101,22 @@ public class Player extends Entity {
 	}
 
 	public void render(Graphics g, int lvlOffset) {
-		g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset, (int) (hitbox.y - yDrawOffset), width, height, null);
-//		drawHitbox(g, lvlOffset);
+		g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
+		drawHitbox(g, lvlOffset);
 		drawAttackBox(g, lvlOffset);
 		drawUI(g);
 	}
 
-	private void drawAttackBox(Graphics g, int lvlOffset) {
+	private void drawAttackBox(Graphics g, int lvlOffsetX) {
 		// TODO Auto-generated method stub
 		g.setColor(Color.red);
-//		g.drawRect(attackBox.x, attackBox.y, attackBox.width, attackBox.height);
+		g.drawRect((int) attackBox.x - lvlOffsetX, (int) attackBox.y, (int) attackBox.width, (int) attackBox.height);
 	}
 
 	private void drawUI(Graphics g) {
 		// TODO Auto-generated method stub
 		g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
-		g.setColor(Color.blue);
+		g.setColor(Color.red);
 		g.fillRect(healthBarXStart + statusBarX, healthBarYStart + statusBarY, healthWidth, healthBarHeight);	}
 
 	private void updateAnimationTick() {
@@ -109,6 +127,7 @@ public class Player extends Entity {
 			if (aniIndex >= GetSpriteAmount(playerAction)) {
 				aniIndex = 0;
 				attacking = false;
+				attackChecked = false;
 			}
 
 		}
@@ -130,8 +149,14 @@ public class Player extends Entity {
 				playerAction = idle;
 		}
 
-		if (attacking)
+		if (attacking) {
 			playerAction = attack_1;
+			if(startAni != attack_1) {
+				aniIndex = 1;
+				aniTick = 0;
+				return;
+			}
+		}
 
 		if (startAni != playerAction)
 			resetAniTick();
@@ -154,11 +179,17 @@ public class Player extends Entity {
 
 		float xSpeed = 0;
 
-		if (left)
+		if (left) {
 			xSpeed -= playerSpeed;
-		if (right)
+			flipX = width;
+			flipW = -1;
+		}
+		if (right) {
 			xSpeed += playerSpeed;
-
+			flipX = 0;
+			flipW = 1;
+		}
+		
 		if (!inAir)
 			if (!IsEntityOnFloor(hitbox, lvlData))
 				inAir = true;
@@ -281,6 +312,21 @@ public class Player extends Entity {
 
 	public void setJump(boolean jump) {
 		this.jump = jump;
+	}
+	
+	public void resetAll() {
+		resetDirBooleans();
+		inAir = false;
+		attacking = false;
+		moving = false;
+		playerAction = idle;
+		currentHealth = maxHealth;
+
+		hitbox.x = x;
+		hitbox.y = y;
+
+		if (!IsEntityOnFloor(hitbox, lvlData))
+			inAir = true;
 	}
 
 }

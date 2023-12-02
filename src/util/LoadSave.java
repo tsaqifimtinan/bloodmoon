@@ -20,7 +20,7 @@ public class LoadSave {
 	public static final String player_atlas = "Raider_3_Spritelist.png";
 	public static final String level_atlas = "outside_sprites.png";
 	// temp sprite
-	public static final String raider_1_atlas = "crabby_sprite.png";
+	public static final String raider_1_atlas = "Raider_1_Spritelist.png";
 	
 	public static final String level_one_data = "level_one_data_long.png";
 	public static final String menu_buttons = "button_atlas.png";
