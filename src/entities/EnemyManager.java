@@ -40,8 +40,8 @@ public class EnemyManager {
 		for (Raider_1 c : raiders) {
 			if (c.isActive()) {
 				g.drawImage(raiderArr[c.getEnemyState()][c.getAniIndex()], (int) c.getHitbox().x - xLvlOffset - raider_1_drawoffset_x + c.flipX(), (int) c.getHitbox().y - raider_1_drawoffset_y, raider_1_width * c.flipW(), raider_1_height, null);
-				c.drawHitbox(g, xLvlOffset);
-				c.drawAttackBox(g, xLvlOffset);
+//				c.drawHitbox(g, xLvlOffset);
+//				c.drawAttackBox(g, xLvlOffset);
 			}
 		}
 

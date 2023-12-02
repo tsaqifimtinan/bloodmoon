@@ -64,6 +64,10 @@ public class Player extends Entity {
 
 	public void update() {
 		updateHealthBar();
+		if (currentHealth <= 0) {
+			playing.setGameOver(true);
+			return;
+		}
 		updateAttackBox();
 		updatePos();
 		if(attacking)
@@ -102,8 +106,8 @@ public class Player extends Entity {
 
 	public void render(Graphics g, int lvlOffset) {
 		g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
-		drawHitbox(g, lvlOffset);
-		drawAttackBox(g, lvlOffset);
+//		drawHitbox(g, lvlOffset);
+//		drawAttackBox(g, lvlOffset);
 		drawUI(g);
 	}
 
@@ -156,6 +160,10 @@ public class Player extends Entity {
 				aniTick = 0;
 				return;
 			}
+		}
+		
+		if (currentHealth <= 0) {
+			playerAction = die;
 		}
 
 		if (startAni != playerAction)
