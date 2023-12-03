@@ -10,6 +10,7 @@ import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
 import levels.LevelManager;
+import util.LoadSave;
 
 public class Game implements Runnable {
 

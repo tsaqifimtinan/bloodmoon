@@ -1,16 +1,16 @@
 package util;
 
-import static util.Constants.EnemyConstants.raider_1;
-
+import static util.Constants.EnemyConstants.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
-
 import entities.Raider_1;
 import entities.Player;
 import entities.Raider_1;
@@ -32,6 +32,7 @@ public class LoadSave {
 	public static final String big_clouds = "big_clouds.png";
 	public static final String small_clouds = "small_clouds.png";
 	public static final String status_bar = "health_power_bar.png";
+	public static final String completed = "completed_sprite.png";
 	
 	public static BufferedImage getSpriteAtlas (String fileName) {
 		BufferedImage img = null;
@@ -51,34 +52,35 @@ public class LoadSave {
 		return img;
 	}
 	
-	public static ArrayList<Raider_1> getRaiders() {
-		BufferedImage img = getSpriteAtlas(level_one_data);
-		ArrayList<Raider_1> list = new ArrayList<>();
-		for (int j = 0; j < img.getHeight(); j++)
-			for (int i = 0; i < img.getWidth(); i++) {
-				Color color = new Color(img.getRGB(i, j));
-				int value = color.getGreen();
-				if (value == raider_1)
-					list.add(new Raider_1(i * Game.tiles_size, j * Game.tiles_size));
+	public static BufferedImage[] GetAllLevels() {
+		URL url = LoadSave.class.getResource("/lvls");
+		File file = null;
+
+		try {
+			file = new File(url.toURI());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+
+		File[] files = file.listFiles();
+		File[] filesSorted = new File[files.length];
+
+		for (int i = 0; i < filesSorted.length; i++)
+			for (int j = 0; j < files.length; j++) {
+				if (files[j].getName().equals((i + 1) + ".png"))
+					filesSorted[i] = files[j];
+
 			}
-		return list;
 
-	}
-	
-	public static int[][] GetLevelData() {
-		BufferedImage img = getSpriteAtlas(level_one_data);
-		int[][] lvlData = new int[img.getHeight()][img.getWidth()];
+		BufferedImage[] imgs = new BufferedImage[filesSorted.length];
 
-		for (int j = 0; j < img.getHeight(); j++)
-			for (int i = 0; i < img.getWidth(); i++) {
-				Color color = new Color(img.getRGB(i, j));
-				int value = color.getRed();
-				if (value >= 48)
-					value = 0;
-				lvlData[j][i] = value;
+		for (int i = 0; i < imgs.length; i++)
+			try {
+				imgs[i] = ImageIO.read(filesSorted[i]);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		return lvlData;
 
+		return imgs;
 	}
-
 }

@@ -14,6 +14,7 @@ import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import ui.GameOverOverlay;
+import ui.LevelCompletedOverlay;
 import ui.PauseOverlay;
 import util.LoadSave;
 import static util.Constants.Environment.*;
@@ -24,50 +25,72 @@ public class Playing extends State implements Statemethods {
 	private EnemyManager enemyManager;
 	private PauseOverlay pauseOverlay;
 	private GameOverOverlay gameOverOverlay;
+	private LevelCompletedOverlay levelCompletedOverlay;
 	private boolean paused = false;
 	private float scale = 2f;
 	private int xLvlOffset;
 	private int leftBorder = (int) (0.2 * Game.game_width);
 	private int rightBorder = (int) (0.8 * Game.game_width);
-	private int lvlTilesWide = LoadSave.GetLevelData()[0].length;
-	private int maxTilesOffset = lvlTilesWide - Game.tiles_in_width;
-	private int maxLvlOffsetX = maxTilesOffset * Game.tiles_size;
+	private int maxLvlOffsetX;
 
 	private BufferedImage backgroundImg, bigCloud, smallCloud;
 	private int[] smallCloudsPos;
 	private Random rnd = new Random();
 	private boolean gameOver;
+	private boolean lvlCompleted;
 
 	public Playing(Game game) {
 		super(game);
 		initClasses();
-
 		backgroundImg = LoadSave.getSpriteAtlas(LoadSave.playing_bg_img);
 		bigCloud = LoadSave.getSpriteAtlas(LoadSave.big_clouds);
 		smallCloud = LoadSave.getSpriteAtlas(LoadSave.small_clouds);
 		smallCloudsPos = new int[8];
 		for (int i = 0; i < smallCloudsPos.length; i++)
 			smallCloudsPos[i] = (int) (90 * Game.scale) + rnd.nextInt((int) (100 * Game.scale));
+		
+		calcLvlOffset();
+		loadStartLevel();
+	}
+	
+	public void loadNextLevel() {
+		resetAll();
+		levelManager.loadNextLevel();
+		player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+	}
+
+	private void loadStartLevel() {
+		enemyManager.loadEnemies(levelManager.getCurrentLevel());
+	}
+
+	private void calcLvlOffset() {
+		maxLvlOffsetX = levelManager.getCurrentLevel().getLvlOffset();
 	}
 
 	private void initClasses() {
 		levelManager = new LevelManager(game);
 		enemyManager = new EnemyManager(this);
-		player = new Player(200, 250, (int) (96 * Game.scale), (int) (96 * Game.scale), this);
+		
+		player = new Player(200, 200, (int) (96 * Game.scale), (int) (96 * Game.scale), this);
 		player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
+		player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+		
 		pauseOverlay = new PauseOverlay(this);
 		gameOverOverlay = new GameOverOverlay(this);
+		levelCompletedOverlay = new LevelCompletedOverlay(this);
 	}
 
 	@Override
 	public void update() {
-		if (!paused && !gameOver) {
+		if (paused) {
+			pauseOverlay.update();
+		} else if (lvlCompleted) {
+			levelCompletedOverlay.update();
+		} else if (!gameOver) {
 			levelManager.update();
 			player.update();
 			enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
 			checkCloseToBorder();
-		} else {
-			pauseOverlay.update();
 		}
 	}
 
@@ -106,6 +129,10 @@ public class Playing extends State implements Statemethods {
 		else if (gameOver) {
 			gameOverOverlay.draw(g);
 		}
+		
+		else if (lvlCompleted) {
+			levelCompletedOverlay.draw(g);
+		}
 	}
 
 	private void drawClouds(Graphics g) {
@@ -121,6 +148,7 @@ public class Playing extends State implements Statemethods {
 	public void resetAll() {
 		gameOver = false;
 		paused = false;
+		lvlCompleted = false;
 		player.resetAll();
 		enemyManager.resetAllEnemies();
 	}
@@ -176,33 +204,40 @@ public class Playing extends State implements Statemethods {
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		if (!gameOver)
+		if (!gameOver) {
 			if (paused)
 				pauseOverlay.mouseDragged(e);
+		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (!gameOver)
+		if (!gameOver) {
 			if (paused)
 				pauseOverlay.mousePressed(e);
-
+			else if (lvlCompleted)
+				levelCompletedOverlay.mousePressed(e);
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (!gameOver)
+		if (!gameOver) {
 			if (paused)
 				pauseOverlay.mouseReleased(e);
-
+			else if (lvlCompleted)
+				levelCompletedOverlay.mouseReleased(e);
+		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (!gameOver)
+		if (!gameOver) {
 			if (paused)
 				pauseOverlay.mouseMoved(e);
-
+			else if (lvlCompleted)
+				levelCompletedOverlay.mouseMoved(e);
+		}
 	}
 
 	public void unpauseGame() {
@@ -225,6 +260,19 @@ public class Playing extends State implements Statemethods {
 	public void setGameOver(boolean gameOver) {
 		// TODO Auto-generated method stub
 		this.gameOver = gameOver;
+	}
+	
+	public EnemyManager getEnemyManager() {
+		return enemyManager;
+	}
+	
+	public void setMaxLvlOffset(int lvlOffset) {
+		this.maxLvlOffsetX = lvlOffset;
+	}
+
+	public void setLevelCompleted(boolean lvlCompleted) {
+		// TODO Auto-generated method stub
+		this.lvlCompleted = lvlCompleted;
 	}
 
 }

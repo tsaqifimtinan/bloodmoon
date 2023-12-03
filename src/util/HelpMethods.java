@@ -1,7 +1,14 @@
 package util;
 
-import java.awt.geom.Rectangle2D;
+import static util.Constants.EnemyConstants.raider_1;
 
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+import entities.Raider_1;
 import main.Game;
 
 public class HelpMethods {
@@ -60,7 +67,6 @@ public class HelpMethods {
 	}
 
 	public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, int[][] lvlData) {
-		// Check the pixel below bottomleft and bottomright
 		if (!IsSolid(hitbox.x, hitbox.y + hitbox.height + 1, lvlData))
 			if (!IsSolid(hitbox.x + hitbox.width, hitbox.y + hitbox.height + 1, lvlData))
 				return false;
@@ -68,28 +74,16 @@ public class HelpMethods {
 		return true;
 
 	}
-
-	/**
-	 * We just check the bottomleft of the enemy here +/- the xSpeed. We never check
-	 * bottom right in case the enemy is going to the right. It would be more
-	 * correct checking the bottomleft for left direction and bottomright for the
-	 * right direction. But it wont have big effect in the game. The enemy will
-	 * simply change direction sooner when there is an edge on the right side of the
-	 * enemy, when its going right.
-	 */
+	
 	public static boolean IsFloor(Rectangle2D.Float hitbox, float xSpeed, int[][] lvlData) {
 	    float checkX;
-
-	    // Adjust the check position based on the direction of movement
+	    
 	    if (xSpeed > 0) {
-	        // Moving to the right, check bottom right
 	        checkX = hitbox.x + hitbox.width + xSpeed;
 	    } else {
-	        // Moving to the left, check bottom left
 	        checkX = hitbox.x + xSpeed;
 	    }
 
-	    // Check for collision at the adjusted position
 	    return IsSolid(checkX, hitbox.y + hitbox.height + 1, lvlData);
 	}
 
@@ -113,5 +107,41 @@ public class HelpMethods {
 		else
 			return IsAllTilesWalkable(firstXTile, secondXTile, yTile, lvlData);
 
+	}
+	
+	public static int[][] GetLevelData(BufferedImage img) {
+		int[][] lvlData = new int[img.getHeight()][img.getWidth()];
+		for (int j = 0; j < img.getHeight(); j++)
+			for (int i = 0; i < img.getWidth(); i++) {
+				Color color = new Color(img.getRGB(i, j));
+				int value = color.getRed();
+				if (value >= 48)
+					value = 0;
+				lvlData[j][i] = value;
+			}
+		return lvlData;
+	}
+	
+	public static ArrayList<Raider_1> GetRaiders(BufferedImage img) {
+		ArrayList<Raider_1> list = new ArrayList<>();
+		for (int j = 0; j < img.getHeight(); j++)
+			for (int i = 0; i < img.getWidth(); i++) {
+				Color color = new Color(img.getRGB(i, j));
+				int value = color.getGreen();
+				if (value == raider_1)
+					list.add(new Raider_1(i * Game.tiles_size, j * Game.tiles_size));
+			}
+		return list;
+	}
+	
+	public static Point GetPlayerSpawn(BufferedImage img) {
+		for (int j = 0; j < img.getHeight(); j++)
+			for (int i = 0; i < img.getWidth(); i++) {
+				Color color = new Color(img.getRGB(i, j));
+				int value = color.getGreen();
+				if (value == 100)
+					return new Point(i * Game.tiles_size, j * Game.tiles_size);
+			}
+		return new Point(1 * Game.tiles_size, 1 * Game.tiles_size);
 	}
 }
