@@ -10,6 +10,7 @@ import java.util.Random;
 
 import entities.EnemyManager;
 import entities.Player;
+import levels.Level;
 import levels.LevelManager;
 import main.Game;
 import objects.ObjectManager;
@@ -168,6 +169,11 @@ public class Playing extends State implements Statemethods {
 	public void checkPotionTouched(Rectangle2D.Float hitbox) {
 		objectManager.checkObjectTouched(hitbox);
 	}
+	
+	public void checkSpikesTouched(Player p) {
+		// TODO Auto-generated method stub
+		objectManager.checkSpikesTouched(p);
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -278,4 +284,8 @@ public class Playing extends State implements Statemethods {
 		return objectManager;
 	}
 
+	public LevelManager getLevelManager() {
+		// TODO Auto-generated method stub
+		return levelManager;
+	}
 }

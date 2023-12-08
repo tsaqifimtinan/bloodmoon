@@ -8,6 +8,7 @@ import entities.Raider_1;
 import main.Game;
 import objects.GameContainer;
 import objects.Potion;
+import objects.Spike;
 import util.HelpMethods;
 import util.LoadSave;
 import static util.HelpMethods.*;
@@ -18,6 +19,7 @@ public class Level {
 	private ArrayList<Raider_1> raiders;
 	private ArrayList<Potion> potions;
 	private ArrayList<GameContainer> boxes;
+	private ArrayList<Spike> spikes;
 	private int lvlTilesWide;
 	private int maxTilesOffset;
 	private int maxLvlOffsetX;
@@ -30,10 +32,16 @@ public class Level {
 		createEnemies();
 		createPotions();
 		createContainers();
+		createSpikes();
 		calcLvlOffsets();
 		calcPlayerSpawn();
 	}
 	
+	private void createSpikes() {
+		// TODO Auto-generated method stub
+		spikes = HelpMethods.GetSpikes(img);
+	}
+
 	private void createContainers() {
 		// TODO Auto-generated method stub
 		boxes = HelpMethods.GetContainers(img);
@@ -89,5 +97,9 @@ public class Level {
 	
 	public ArrayList<GameContainer> getContainers() {
 		return boxes;
+	}
+	
+	public ArrayList<Spike> getSpikes() {
+		return spikes;
 	}
 }

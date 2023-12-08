@@ -13,6 +13,7 @@ import entities.Raider_1;
 import main.Game;
 import objects.GameContainer;
 import objects.Potion;
+import objects.Spike;
 
 public class HelpMethods {
 	public static boolean CanMoveHere(float x, float y, float width, float height, int[][] lvlData) {
@@ -168,6 +169,18 @@ public class HelpMethods {
 				int value = color.getBlue();
 				if (value == BOX || value == BARREL)
 					list.add(new GameContainer(i * Game.tiles_size, j * Game.tiles_size, value));
+			}
+		return list;
+	}
+
+	public static ArrayList<Spike> GetSpikes(BufferedImage img) {
+		ArrayList<Spike> list = new ArrayList<>();
+		for (int j = 0; j < img.getHeight(); j++)
+			for (int i = 0; i < img.getWidth(); i++) {
+				Color color = new Color(img.getRGB(i, j));
+				int value = color.getBlue();
+				if (value == SPIKE)
+					list.add(new Spike(i * Game.tiles_size, j * Game.tiles_size, SPIKE));
 			}
 		return list;
 	}

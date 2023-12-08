@@ -46,7 +46,7 @@ public class Player extends Entity {
 		this.playing = playing;
 		this.state = idle;
 		this.maxHealth = 100;
-		this.currentHealth = 35;
+		this.currentHealth = maxHealth;
 		this.walkSpeed = Game.scale * 1.0f;
 		loadAnimations();
 		initHitbox(15, 28);
@@ -77,11 +77,17 @@ public class Player extends Entity {
 		updatePos();
 		if (moving)
 			checkPotionTouched();
+			checkSpikesTouched();
 		if (attacking)
 			checkAttack();
 		
 		updateAnimationTick();
 		setAnimation();
+	}
+
+	private void checkSpikesTouched() {
+		// TODO Auto-generated method stub
+		playing.checkSpikesTouched(this);
 	}
 
 	private void checkPotionTouched() {
@@ -239,6 +245,10 @@ public class Player extends Entity {
 			currentHealth = 0;
 		else if (currentHealth >= maxHealth)
 			currentHealth = maxHealth;
+	}
+	
+	public void kill() {
+		currentHealth = 0;
 	}
 
 	public void changePower(int value) {
