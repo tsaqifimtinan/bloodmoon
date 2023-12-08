@@ -1,37 +1,27 @@
 package entities;
 
 import static util.Constants.EnemyConstants.*;
+import static util.Constants.*;
 import static util.HelpMethods.*;
-
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Float;
-
 import static util.Constants.Direction.*;
-
 import main.Game;
 
 public abstract class Enemy extends Entity {
-	protected int aniIndex, enemyState, enemyType;
-	protected int aniTick, aniSpeed = 25;
+	protected int enemyType;
 	protected boolean firstUpdate = true;
-	protected boolean inAir;
-	protected float fallSpeed;
-	protected float gravity = 0.04f * Game.scale;
-	protected float walkSpeed = 0.25f * Game.scale;
 	protected int walkDir = left;
 	protected int tileY;
 	protected float attackDistance = Game.tiles_size;
-	protected int maxHealth;
-	protected int currentHealth;
 	protected boolean active = true;
 	protected boolean attackChecked;
 
 	public Enemy(float x, float y, int width, int height, int enemyType) {
 		super(x, y, width, height);
 		this.enemyType = enemyType;
-		initHitbox(x, y, width, height);
 		maxHealth = getMaxHealth(enemyType);
 		currentHealth = maxHealth;
+		walkSpeed = 0.25f * Game.scale;
 	}
 	
 	protected void firstUpdateCheck(int[][] lvlData) {
@@ -41,12 +31,12 @@ public abstract class Enemy extends Entity {
 	}
 	
 	protected void updateInAir(int[][] lvlData) {
-		if (CanMoveHere(hitbox.x, hitbox.y + fallSpeed, hitbox.width, hitbox.height, lvlData)) {
-			hitbox.y += fallSpeed;
-			fallSpeed += gravity;
+		if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
+			hitbox.y += airSpeed;
+			airSpeed += gravity;
 		} else {
 			inAir = false;
-			hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, fallSpeed);
+			hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
 			tileY = (int) hitbox.y / Game.tiles_size;
 		}
 	}
@@ -68,8 +58,8 @@ public abstract class Enemy extends Entity {
 		changeWalkDir();
 	}
 	
-	protected void newState(int enemyState) {
-		this.enemyState = enemyState;
+	protected void newState(int state) {
+		this.state = state;
 		aniTick = 0;
 		aniIndex = 0;
 	}
@@ -113,11 +103,11 @@ public abstract class Enemy extends Entity {
 		if (aniTick >= aniSpeed) {
 			aniTick = 0;
 			aniIndex++;
-			if (aniIndex >= getSpriteAmount(enemyType, enemyState)) {
+			if (aniIndex >= getSpriteAmount(enemyType, state)) {
 				aniIndex = 0;
 				
-				switch(enemyState) {
-				case attack_1, hurt -> enemyState = idle;
+				switch(state) {
+				case attack_1, hurt -> state = idle;
 				case die -> active = false;
 				}
 			}
@@ -139,7 +129,7 @@ public abstract class Enemy extends Entity {
 		currentHealth = maxHealth;
 		newState(idle);
 		active = true;
-		fallSpeed = 0;
+		airSpeed = 0;
 	}
 	
 	public void hurt(int amount) {
@@ -159,14 +149,6 @@ public abstract class Enemy extends Entity {
 		}
 		
 		attackChecked = true;
-	}
-
-	public int getAniIndex() {
-		return aniIndex;
-	}
-
-	public int getEnemyState() {
-		return enemyState;
 	}
 	
 	public boolean isActive() {

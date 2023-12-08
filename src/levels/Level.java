@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import entities.Raider_1;
 import main.Game;
+import objects.GameContainer;
+import objects.Potion;
 import util.LoadSave;
 import static util.HelpMethods.*;
 
@@ -13,6 +15,8 @@ public class Level {
 	private int[][] lvlData;
 	private BufferedImage img;
 	private ArrayList<Raider_1> raiders;
+	private ArrayList<Potion> potions;
+	private ArrayList<GameContainer> boxes;
 	private int lvlTilesWide;
 	private int maxTilesOffset;
 	private int maxLvlOffsetX;
@@ -23,10 +27,22 @@ public class Level {
 		this.img = img;
 		createLevelData();
 		createEnemies();
+		createPotions();
+		createContainers();
 		calcLvlOffsets();
 		calcPlayerSpawn();
 	}
 	
+	private void createContainers() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void createPotions() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void calcPlayerSpawn() {
 		playerSpawn = GetPlayerSpawn(img);
 	}
@@ -63,5 +79,10 @@ public class Level {
 	
 	public Point getPlayerSpawn() {
 		return playerSpawn;
+	}
+
+	public ArrayList<Potion> getPotions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

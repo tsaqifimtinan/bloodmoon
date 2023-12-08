@@ -33,6 +33,9 @@ public class LoadSave {
 	public static final String small_clouds = "small_clouds.png";
 	public static final String status_bar = "health_power_bar.png";
 	public static final String completed = "completed_sprite.png";
+	public static final String potion_atlas = "potions_sprites.png";
+	public static final String box_atlas = "objects_sprites.png";
+
 	
 	public static BufferedImage getSpriteAtlas (String fileName) {
 		BufferedImage img = null;

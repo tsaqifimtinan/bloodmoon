@@ -11,13 +11,12 @@ import java.awt.geom.Rectangle2D;
 import main.Game;
 
 public class Raider_1 extends Enemy {
-	private Rectangle2D.Float attackBox;
 	private int attackBoxOffsetX;
 
 	public Raider_1(float x, float y) {
 		// TODO Auto-generated constructor stub
 		super(x, y, raider_1_width, raider_1_height, raider_1);
-		initHitbox(x, y, (int) (22 * Game.scale), (int) (19 * Game.scale));
+		initHitbox(22, 19);
 		initAttackBox();
 	}
 	
@@ -49,7 +48,7 @@ public class Raider_1 extends Enemy {
 		} 
 		
 		else {
-			switch (enemyState) {
+			switch (state) {
 			case idle:
 				newState(running);
 				break;
@@ -72,13 +71,6 @@ public class Raider_1 extends Enemy {
 				break;
 			}
 		}
-	}
-	
-	
-	
-	public void drawAttackBox(Graphics g, int xLvlOffset) {
-		g.setColor(Color.CYAN);
-		g.drawRect((int) attackBox.x - xLvlOffset, (int) attackBox.y, (int) attackBox.width, (int) attackBox.height);
 	}
 	
 	public int flipX() {

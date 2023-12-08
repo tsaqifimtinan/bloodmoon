@@ -4,6 +4,40 @@ import main.Game;
 
 public class Constants {
 	
+	public static final float gravity = 0.04f * Game.scale;
+	public static final int aniSpeed = 25;
+	
+	public static class ObjectConstants {
+
+		public static final int RED_POTION = 0;
+		public static final int BLUE_POTION = 1;
+		public static final int BARREL = 2;
+		public static final int BOX = 3;
+
+		public static final int RED_POTION_VALUE = 15;
+		public static final int BLUE_POTION_VALUE = 10;
+
+		public static final int CONTAINER_WIDTH_DEFAULT = 40;
+		public static final int CONTAINER_HEIGHT_DEFAULT = 30;
+		public static final int CONTAINER_WIDTH = (int) (Game.scale * CONTAINER_WIDTH_DEFAULT);
+		public static final int CONTAINER_HEIGHT = (int) (Game.scale * CONTAINER_HEIGHT_DEFAULT);
+
+		public static final int POTION_WIDTH_DEFAULT = 12;
+		public static final int POTION_HEIGHT_DEFAULT = 16;
+		public static final int POTION_WIDTH = (int) (Game.scale * POTION_WIDTH_DEFAULT);
+		public static final int POTION_HEIGHT = (int) (Game.scale * POTION_HEIGHT_DEFAULT);
+
+		public static int getSpriteAmount(int object_type) {
+			switch (object_type) {
+			case RED_POTION, BLUE_POTION:
+				return 7;
+			case BARREL, BOX:
+				return 8;
+			}
+			return 1;
+		}
+	}
+	
 	public static class Environment {
 		public static final int BIG_CLOUD_WIDTH_DEFAULT = 448;
 		public static final int BIG_CLOUD_HEIGHT_DEFAULT = 101;
