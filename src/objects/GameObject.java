@@ -10,54 +10,51 @@ import java.awt.geom.Rectangle2D;
 import main.Game;
 
 public class GameObject {
+
 	protected int x, y, objType;
 	protected Rectangle2D.Float hitbox;
 	protected boolean doAnimation, active = true;
 	protected int aniTick, aniIndex;
 	protected int xDrawOffset, yDrawOffset;
-	
-	public GameObject (int x, int y, int objType) {
+
+	public GameObject(int x, int y, int objType) {
 		this.x = x;
 		this.y = y;
 		this.objType = objType;
 	}
-	
+
 	protected void updateAnimationTick() {
-		aniTick++;
-		if (aniTick >= aniSpeed) {
-			aniTick = 0;
-			aniIndex++;
-			if (aniIndex >= getSpriteAmount(objType)) {
-				aniIndex = 0;
-				
-				if (objType == BARREL || objType == BOX) {
-					doAnimation = false;
-					active = false;
-				}
-			}
-		}
+	    aniTick++;
+	    if (aniTick >= aniSpeed) {
+	        aniTick = 0;
+	        aniIndex++;
+	        if (aniIndex >= getSpriteAmount(objType)) {
+	            aniIndex = 0;
+	            if (objType == BARREL || objType == BOX) {
+	                doAnimation = false;
+	                active = false; // Set 'active' to false to make the object disappear
+	            }
+	        }
+	    }
 	}
-	
+
 	public void reset() {
 		aniIndex = 0;
 		aniTick = 0;
 		active = true;
-		
-		if (objType == BARREL || objType == BOX) {
+
+		if (objType == BARREL || objType == BOX)
 			doAnimation = false;
-		}
-		
-		else {
+		else
 			doAnimation = true;
-		}
 	}
-	
+
 	protected void initHitbox(int width, int height) {
-		hitbox = new Rectangle2D.Float(x, y,(int) (width * Game.scale), (int) (height * Game.scale));
+		hitbox = new Rectangle2D.Float(x, y, (int) (width * Game.scale), (int) (height * Game.scale));
 	}
-	
-	protected void drawHitbox(Graphics g, int xLvlOffset) {
-		g.setColor(Color.green);
+
+	public void drawHitbox(Graphics g, int xLvlOffset) {
+		g.setColor(Color.PINK);
 		g.drawRect((int) hitbox.x - xLvlOffset, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
 	}
 
@@ -72,11 +69,11 @@ public class GameObject {
 	public boolean isActive() {
 		return active;
 	}
-	
-	public void setActive (boolean active) {
+
+	public void setActive(boolean active) {
 		this.active = active;
 	}
-	
+
 	public void setAnimation(boolean doAnimation) {
 		this.doAnimation = doAnimation;
 	}
@@ -88,8 +85,9 @@ public class GameObject {
 	public int getyDrawOffset() {
 		return yDrawOffset;
 	}
-	
+
 	public int getAniIndex() {
 		return aniIndex;
 	}
+
 }

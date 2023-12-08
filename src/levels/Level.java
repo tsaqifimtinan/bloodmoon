@@ -8,6 +8,7 @@ import entities.Raider_1;
 import main.Game;
 import objects.GameContainer;
 import objects.Potion;
+import util.HelpMethods;
 import util.LoadSave;
 import static util.HelpMethods.*;
 
@@ -35,12 +36,12 @@ public class Level {
 	
 	private void createContainers() {
 		// TODO Auto-generated method stub
-		
+		boxes = HelpMethods.GetContainers(img);
 	}
 
 	private void createPotions() {
 		// TODO Auto-generated method stub
-		
+		potions = HelpMethods.GetPotions(img);
 	}
 
 	private void calcPlayerSpawn() {
@@ -83,6 +84,10 @@ public class Level {
 
 	public ArrayList<Potion> getPotions() {
 		// TODO Auto-generated method stub
-		return null;
+		return potions;
+	}
+	
+	public ArrayList<GameContainer> getContainers() {
+		return boxes;
 	}
 }

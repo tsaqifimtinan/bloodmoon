@@ -46,13 +46,14 @@ public class Player extends Entity {
 		this.playing = playing;
 		this.state = idle;
 		this.maxHealth = 100;
-		this.currentHealth = maxHealth;
+		this.currentHealth = 35;
+		this.walkSpeed = Game.scale * 1.0f;
 		loadAnimations();
 		initHitbox(15, 28);
 		initAttackBox();
 	}
-	
-	public void setSpawn (Point spawn) {
+
+	public void setSpawn(Point spawn) {
 		this.x = spawn.x;
 		this.y = spawn.y;
 		hitbox.x = x;
@@ -60,49 +61,51 @@ public class Player extends Entity {
 	}
 
 	private void initAttackBox() {
-		// TODO Auto-generated method stub
 		attackBox = new Rectangle2D.Float(x, y, (int) (20 * Game.scale), (int) (20 * Game.scale));
 	}
 
 	public void update() {
 		updateHealthBar();
+
 		if (currentHealth <= 0) {
 			playing.setGameOver(true);
 			return;
 		}
+
 		updateAttackBox();
+
 		updatePos();
-		if(attacking)
+		if (moving)
+			checkPotionTouched();
+		if (attacking)
 			checkAttack();
+		
 		updateAnimationTick();
 		setAnimation();
 	}
 
+	private void checkPotionTouched() {
+		playing.checkPotionTouched(hitbox);
+	}
+
 	private void checkAttack() {
-		// TODO Auto-generated method stub
-		if(attackChecked || aniIndex != 1) {
+		if (attackChecked || aniIndex != 1)
 			return;
-		}
-		
 		attackChecked = true;
-		playing.checkPlayerHit(attackBox);
+		playing.checkEnemyHit(attackBox);
+		playing.checkObjectHit(attackBox);
 	}
 
 	private void updateAttackBox() {
-		// TODO Auto-generated method stub
-		if(right) {
+		if (right)
 			attackBox.x = hitbox.x + hitbox.width + (int) (Game.scale * 10);
-		}
-		
-		else if (left) {
+		else if (left)
 			attackBox.x = hitbox.x - hitbox.width - (int) (Game.scale * 10);
-		}
-		
+
 		attackBox.y = hitbox.y + (Game.scale * 10);
 	}
 
 	private void updateHealthBar() {
-		// TODO Auto-generated method stub
 		healthWidth = (int) ((currentHealth / (float) maxHealth) * healthBarWidth);
 	}
 
@@ -114,10 +117,10 @@ public class Player extends Entity {
 	}
 
 	private void drawUI(Graphics g) {
-		// TODO Auto-generated method stub
 		g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
 		g.setColor(Color.red);
-		g.fillRect(healthBarXStart + statusBarX, healthBarYStart + statusBarY, healthWidth, healthBarHeight);	}
+		g.fillRect(healthBarXStart + statusBarX, healthBarYStart + statusBarY, healthWidth, healthBarHeight);
+	}
 
 	private void updateAnimationTick() {
 		aniTick++;
@@ -129,9 +132,7 @@ public class Player extends Entity {
 				attacking = false;
 				attackChecked = false;
 			}
-
 		}
-
 	}
 
 	private void setAnimation() {
@@ -148,35 +149,15 @@ public class Player extends Entity {
 			else
 				state = idle;
 		}
-		
-		if (taunting) {
-	        state = taunt;
-	        if (startAni != taunt) {
-	            aniIndex = 0;
-	            aniTick = 0;
-	            return;
-	        }
-
-	        if (aniIndex == GetSpriteAmount(taunt) - 1) {
-	            // Taunt animation has finished
-	            taunting = false;
-	            state = idle;
-	        }
-		}
 
 		if (attacking) {
 			state = attack_1;
-			if(startAni != attack_1) {
+			if (startAni != attack_1) {
 				aniIndex = 1;
 				aniTick = 0;
 				return;
 			}
 		}
-
-		if (currentHealth <= 0) {
-			state = die;
-		}
-
 		if (startAni != state)
 			resetAniTick();
 	}
@@ -208,7 +189,7 @@ public class Player extends Entity {
 			flipX = 0;
 			flipW = 1;
 		}
-		
+
 		if (!inAir)
 			if (!IsEntityOnFloor(hitbox, lvlData))
 				inAir = true;
@@ -237,45 +218,40 @@ public class Player extends Entity {
 			return;
 		inAir = true;
 		airSpeed = jumpSpeed;
-
 	}
 
 	private void resetInAir() {
 		inAir = false;
 		airSpeed = 0;
-
 	}
 
 	private void updateXPos(float xSpeed) {
-		if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
+		if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData))
 			hitbox.x += xSpeed;
-		} else {
+		else
 			hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
-		}
-
 	}
-	
-	public void changeHealth (int value) {
+
+	public void changeHealth(int value) {
 		currentHealth += value;
-		
-		if(currentHealth <= 0) {
+
+		if (currentHealth <= 0)
 			currentHealth = 0;
-			//gameOver();
-		}
-		
-		else if (currentHealth >= maxHealth) {
+		else if (currentHealth >= maxHealth)
 			currentHealth = maxHealth;
-		}
+	}
+
+	public void changePower(int value) {
+		System.out.println("Added power!");
 	}
 
 	private void loadAnimations() {
 		BufferedImage img = LoadSave.getSpriteAtlas(LoadSave.player_atlas);
-
 		animations = new BufferedImage[10][9];
 		for (int j = 0; j < animations.length; j++)
 			for (int i = 0; i < animations[j].length; i++)
 				animations[j][i] = img.getSubimage(i * 128, j * 128, 128, 128);
-	
+
 		statusBarImg = LoadSave.getSpriteAtlas(LoadSave.status_bar);
 	}
 
@@ -283,7 +259,6 @@ public class Player extends Entity {
 		this.lvlData = lvlData;
 		if (!IsEntityOnFloor(hitbox, lvlData))
 			inAir = true;
-
 	}
 
 	public void resetDirBooleans() {
@@ -293,10 +268,6 @@ public class Player extends Entity {
 
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
-	}
-	
-	public void setTaunting(boolean taunting) {
-		this.taunting = taunting;
 	}
 
 	public boolean isLeft() {
@@ -318,7 +289,7 @@ public class Player extends Entity {
 	public void setJump(boolean jump) {
 		this.jump = jump;
 	}
-	
+
 	public void resetAll() {
 		resetDirBooleans();
 		inAir = false;
