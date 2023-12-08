@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import entities.Raider_1;
 import main.Game;
+import objects.Cannon;
 import objects.GameContainer;
 import objects.Potion;
 import objects.Spike;
@@ -19,6 +20,7 @@ public class Level {
 	private ArrayList<Raider_1> raiders;
 	private ArrayList<Potion> potions;
 	private ArrayList<GameContainer> boxes;
+	private ArrayList<Cannon> cannons;
 	private ArrayList<Spike> spikes;
 	private int lvlTilesWide;
 	private int maxTilesOffset;
@@ -33,10 +35,16 @@ public class Level {
 		createPotions();
 		createContainers();
 		createSpikes();
+		createCannons();
 		calcLvlOffsets();
 		calcPlayerSpawn();
 	}
 	
+	private void createCannons() {
+		// TODO Auto-generated method stub
+		cannons = HelpMethods.GetCannons(img);
+	}
+
 	private void createSpikes() {
 		// TODO Auto-generated method stub
 		spikes = HelpMethods.GetSpikes(img);
@@ -101,5 +109,9 @@ public class Level {
 	
 	public ArrayList<Spike> getSpikes() {
 		return spikes;
+	}
+	
+	public ArrayList<Cannon> getCannons() {
+		return cannons;
 	}
 }

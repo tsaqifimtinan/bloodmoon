@@ -40,6 +40,7 @@ public class Player extends Entity {
 	private int flipW = 1;
 	private boolean attackChecked;
 	private Playing playing;
+	private int tileY = 0;
 
 	public Player(float x, float y, int width, int height, Playing playing) {
 		super(x, y, width, height);
@@ -75,9 +76,11 @@ public class Player extends Entity {
 		updateAttackBox();
 
 		updatePos();
-		if (moving)
+		if (moving) {
 			checkPotionTouched();
 			checkSpikesTouched();
+			tileY = (int) (hitbox.y / Game.tiles_size);
+		}
 		if (attacking)
 			checkAttack();
 		
@@ -313,5 +316,9 @@ public class Player extends Entity {
 
 		if (!IsEntityOnFloor(hitbox, lvlData))
 			inAir = true;
+	}
+
+	public int getTileY() {
+		return tileY;
 	}
 }
