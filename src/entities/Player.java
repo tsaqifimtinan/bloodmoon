@@ -79,7 +79,6 @@ public class Player extends Entity {
 			} else {
 				updateAnimationTick();
 			}
-			
 			return;
 		}
 
@@ -167,6 +166,21 @@ public class Player extends Entity {
 				state = attack_jump;
 			else
 				state = idle;
+		}
+		
+		if (taunting) {
+	        state = taunt;
+	        if (startAni != taunt) {
+	            aniIndex = 0;
+	            aniTick = 0;
+	            return;
+	        }
+
+	        if (aniIndex == GetSpriteAmount(taunt) - 1) {
+	            // Taunt animation has finished
+	            taunting = false;
+	            state = idle;
+	        }
 		}
 
 		if (attacking) {
@@ -291,6 +305,10 @@ public class Player extends Entity {
 
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
+	}
+	
+	public void setTaunting(boolean taunting) {
+		this.taunting = taunting;
 	}
 
 	public boolean isLeft() {
