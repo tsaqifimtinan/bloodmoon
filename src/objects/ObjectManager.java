@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
 import entities.Player;
 import gamestates.Playing;
 import levels.Level;
@@ -12,17 +11,24 @@ import main.Game;
 import util.LoadSave;
 import static util.Constants.ObjectConstants.*;
 import static util.HelpMethods.*;
+import static util.Constants.Projectiles.*;
+import static util.HelpMethods.*;
 
 public class ObjectManager {
 
 	private Playing playing;
 	private BufferedImage[][] potionImgs, containerImgs;
 	private BufferedImage[] cannonImgs;
-	private BufferedImage spikeImg;
+	private BufferedImage spikeImg, cannonBallImg;
 	private ArrayList<Potion> potions;
 	private ArrayList<GameContainer> containers;
 	private ArrayList<Spike> spikes;
 	private ArrayList<Cannon> cannons;
+	private ArrayList<Projectile> projectiles = new ArrayList<>();
+	
+	private long lastHealthChangeTime = System.currentTimeMillis();
+	private static final long HEALTH_CHANGE_COOLDOWN = 500; // 1 second in milliseconds
+
 
 	public ObjectManager(Playing playing) {
 		this.playing = playing;
@@ -30,9 +36,16 @@ public class ObjectManager {
 	}
 
 	public void checkSpikesTouched(Player p) {
-		for (Spike s : spikes)
-			if (s.getHitbox().intersects(p.getHitbox()))
-				p.kill();
+	    long currentTime = System.currentTimeMillis();
+
+	    if (currentTime - lastHealthChangeTime >= HEALTH_CHANGE_COOLDOWN) {
+	        for (Spike s : spikes) {
+	            if (s.getHitbox().intersects(p.getHitbox())) {
+	                p.changeHealth(-SPIKE_VALUE);
+	                lastHealthChangeTime = currentTime;
+	            }
+	        }
+	    }
 	}
 
 	public void checkObjectTouched(Rectangle2D.Float hitbox) {
@@ -71,6 +84,7 @@ public class ObjectManager {
 		containers = new ArrayList<>(newLevel.getContainers());
 		spikes = newLevel.getSpikes();
 		cannons = newLevel.getCannons();
+		projectiles.clear();
 	}
 
 	private void loadImgs() {
@@ -95,6 +109,8 @@ public class ObjectManager {
 
 		for (int i = 0; i < cannonImgs.length; i++)
 			cannonImgs[i] = temp.getSubimage(i * 40, 0, 40, 26);
+		
+		cannonBallImg = LoadSave.getSpriteAtlas(LoadSave.cannon_ball);
 	}
 
 	public void update(int[][] lvlData, Player player) {
@@ -107,6 +123,19 @@ public class ObjectManager {
 				gc.update();
 
 		updateCannons(lvlData, player);
+		updateProjectiles (lvlData, player);
+	}
+	
+	private void updateProjectiles(int[][] lvlData, Player player) {
+		for (Projectile p : projectiles)
+			if (p.isActive()) {
+				p.updatePos();
+				if (p.getHitbox().intersects(player.getHitbox())) {
+					player.changeHealth(-15);
+					p.setActive(false);
+				} else if (IsProjectileHittingLevel(p, lvlData))
+					p.setActive(false);
+			}
 	}
 	
 	private void updateCannons(int[][] lvlData, Player player) {
@@ -116,9 +145,12 @@ public class ObjectManager {
 					if (isPlayerInRange(c, player))
 						if (isPlayerInfrontOfCannon(c, player))
 							if (CanCannonSeePlayer(lvlData, player.getHitbox(), c.getHitbox(), c.getTileY())) {
-								shootCannon(c);
+								c.setAnimation(true);
 							}
 			c.update();
+			if (c.getAniIndex() == 4 && c.getAniTick() == 0) {
+				shootCannon(c);
+			}
 		}
 	}
 
@@ -143,7 +175,12 @@ public class ObjectManager {
 
 	private void shootCannon(Cannon c) {
 		c.setAnimation(true);
-
+		
+		int dir = 1;
+		if(c.getObjType() == CANNON_LEFT)
+			dir = -1;
+		
+		projectiles.add(new Projectile ((int) c.getHitbox().x, (int) c.getHitbox().y, dir));
 	}
 
 	public void draw(Graphics g, int xLvlOffset) {
@@ -151,6 +188,14 @@ public class ObjectManager {
 		drawContainers(g, xLvlOffset);
 		drawTraps(g, xLvlOffset);
 		drawCannons(g, xLvlOffset);
+		drawProjectiles(g, xLvlOffset);
+	}
+
+	private void drawProjectiles(Graphics g, int xLvlOffset) {
+		for (Projectile p : projectiles)
+			if (p.isActive())
+				g.drawImage(cannonBallImg, (int) (p.getHitbox().x - xLvlOffset), (int) (p.getHitbox().y), CANNON_BALL_WIDTH, CANNON_BALL_HEIGHT, null);
+
 	}
 
 	private void drawCannons(Graphics g, int xLvlOffset) {

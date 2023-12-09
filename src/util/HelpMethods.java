@@ -2,6 +2,7 @@ package util;
 
 import static util.Constants.EnemyConstants.raider_1;
 import static util.Constants.ObjectConstants.*;
+import static util.HelpMethods.IsSolid;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -15,6 +16,7 @@ import main.Game;
 import objects.Cannon;
 import objects.GameContainer;
 import objects.Potion;
+import objects.Projectile;
 import objects.Spike;
 
 public class HelpMethods {
@@ -27,7 +29,7 @@ public class HelpMethods {
 		return false;
 	}
 
-	private static boolean IsSolid(float x, float y, int[][] lvlData) {
+	public static boolean IsSolid(float x, float y, int[][] lvlData) {
 		int maxWidth = lvlData[0].length * Game.tiles_size;
 		if (x < 0 || x >= maxWidth)
 			return true;
@@ -37,6 +39,11 @@ public class HelpMethods {
 		float yIndex = y / Game.tiles_size;
 
 		return IsTileSolid((int) xIndex, (int) yIndex, lvlData);
+	}
+	
+	public static boolean IsProjectileHittingLevel(Projectile p, int[][] lvlData) {
+		// TODO Auto-generated method stub
+		return IsSolid(p.getHitbox().x + p.getHitbox().width / 2, p.getHitbox().y + p.getHitbox().height / 2, lvlData);
 	}
 
 	public static boolean IsTileSolid(int xTile, int yTile, int[][] lvlData) {
