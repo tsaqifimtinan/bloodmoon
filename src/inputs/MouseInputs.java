@@ -17,15 +17,18 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
 		switch (Gamestate.state) {
 		case playing:
 			gamePanel.getGame().getPlaying().mouseDragged(e);
+			break;
+		case options:
+			gamePanel.getGame().getGameOptions().mouseDragged(e);
 			break;
 		default:
 			break;
 
 		}
+
 	}
 
 	@Override
@@ -37,26 +40,31 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 		case playing:
 			gamePanel.getGame().getPlaying().mouseMoved(e);
 			break;
+		case options:
+			gamePanel.getGame().getGameOptions().mouseMoved(e);
+			break;
 		default:
 			break;
 
 		}
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		switch(Gamestate.state) {
+		switch (Gamestate.state) {
 		case playing:
 			gamePanel.getGame().getPlaying().mouseClicked(e);
 			break;
 		default:
 			break;
+
 		}
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 		switch (Gamestate.state) {
 		case menu:
 			gamePanel.getGame().getMenu().mousePressed(e);
@@ -64,15 +72,18 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 		case playing:
 			gamePanel.getGame().getPlaying().mousePressed(e);
 			break;
+		case options:
+			gamePanel.getGame().getGameOptions().mousePressed(e);
+			break;
 		default:
 			break;
 
 		}
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 		switch (Gamestate.state) {
 		case menu:
 			gamePanel.getGame().getMenu().mouseReleased(e);
@@ -80,10 +91,14 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 		case playing:
 			gamePanel.getGame().getPlaying().mouseReleased(e);
 			break;
+		case options:
+			gamePanel.getGame().getGameOptions().mouseReleased(e);
+			break;
 		default:
 			break;
 
 		}
+
 	}
 
 	@Override
@@ -94,7 +109,6 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
